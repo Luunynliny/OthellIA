@@ -1,6 +1,6 @@
 import pygame
 
-from sprites import Board, PieceLayout
+from sprites import Board, IndicatorLayout, PieceLayout
 
 WIDTH, HEIGHT = (605, 605)
 BOARD_COLOR = (77, 77, 77)
@@ -12,6 +12,7 @@ if __name__ == "__main__":
 
     board = Board()
     piece_layout = PieceLayout()
+    indicator_layout = IndicatorLayout()
 
     running = True
     while running:
@@ -22,6 +23,7 @@ if __name__ == "__main__":
         screen.fill(BOARD_COLOR)
         board.draw(screen)
         piece_layout.draw(screen)
+        indicator_layout.draw(screen)
 
         pygame.display.flip()
 
