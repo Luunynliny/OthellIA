@@ -49,7 +49,10 @@ class Piece(pygame.sprite.Sprite):
         pygame.draw.circle(
             self.image,
             color=BLACK_PIECE_COLOR if is_black else WHITE_PIECE_COLOR,
-            center=(PIECE_SIZE / 2 + CELL_GAP, PIECE_SIZE / 2 + CELL_GAP),
+            center=(
+                CELL_SIZE / 2,
+                CELL_SIZE / 2,
+            ),
             radius=PIECE_SIZE / 2,
             width=0,  # Fill the circle
         )
