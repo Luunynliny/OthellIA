@@ -1,6 +1,6 @@
 import pygame
 
-from sprites import Board
+from sprites import Board, PieceLayout
 
 WIDTH, HEIGHT = (605, 605)
 BOARD_COLOR = (77, 77, 77)
@@ -11,6 +11,7 @@ if __name__ == "__main__":
     pygame.display.set_caption("Othellia")
 
     board = Board()
+    piece_layout = PieceLayout()
 
     running = True
     while running:
@@ -20,6 +21,7 @@ if __name__ == "__main__":
 
         screen.fill(BOARD_COLOR)
         board.draw(screen)
+        piece_layout.draw(screen)
 
         pygame.display.flip()
 
