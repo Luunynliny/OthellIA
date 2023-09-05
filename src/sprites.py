@@ -124,3 +124,31 @@ class IndicatorLayout(pygame.sprite.Group):
             Indicator(4, 5),
             Indicator(5, 4),
         )
+
+
+class PhantomPiece(pygame.sprite.Sprite):
+    def __init__(self, row, col, is_black):
+        super().__init__()
+
+        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+        pygame.draw.circle(
+            self.image,
+            color=(*BLACK_PIECE_COLOR, 255 / 2)
+            if is_black
+            else (*WHITE_PIECE_COLOR, 255 / 2),
+            center=(
+                CELL_SIZE / 2,
+                CELL_SIZE / 2,
+            ),
+            radius=PIECE_SIZE / 2,
+            width=0,  # Fill the circle
+        )
+
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (
+            row * CELL_SIZE + (row + 1) * CELL_GAP,
+            col * CELL_SIZE + (col + 1) * CELL_GAP,
+        )
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
