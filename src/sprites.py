@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 
 BOARD_SIZE = 605
@@ -95,16 +96,21 @@ class PieceLayout(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
-        self.init_layout()
+    def update(self, cells: np.ndarray):
+        """Update the piece layout according the content of all board's cells.
 
-    def init_layout(self):
-        """Initiliaze starting piece layout."""
-        self.add(
-            Piece(3, 3, is_black=False),
-            Piece(3, 4, is_black=True),
-            Piece(4, 3, is_black=True),
-            Piece(4, 4, is_black=False),
-        )
+        Args:
+            cells (np.ndarray): board's cells.
+        """
+        for row in range(8):
+            for col in range(8):
+                val = cells[row, col]
+
+                # Check empty cell
+                if val == 0:
+                    continue
+
+                self.add(Piece(row, col, is_black=(val == 1)))
 
 
 class Indicator(pygame.sprite.Sprite):
