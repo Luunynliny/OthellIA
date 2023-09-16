@@ -42,7 +42,6 @@ class Game:
         Returns:
             bool: non-presence of a piece.
         """
-        print(cell_index, self.board[cell_index])
         return self.board[cell_index] == 0
 
     def play_piece(self, cell_index: tuple[int, int], is_black: bool):

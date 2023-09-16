@@ -1,16 +1,16 @@
 import numpy as np
 import pygame
 
-BOARD_SIZE = 605
-CELL_SIZE = 70
-CELL_GAP = 5
-PIECE_SIZE = 60
-INDICATOR_SIZE = 25
-
-CELL_COLOR = (141, 187, 100)
-BLACK_PIECE_COLOR = (47, 54, 64)
-WHITE_PIECE_COLOR = (245, 246, 250)
-INDICATOR_COLOR = (159, 100, 187)
+from settings import (
+    BLACK_PIECE_COLOR,
+    CELL_COLOR,
+    CELL_GAP,
+    CELL_SIZE,
+    INDICATOR_COLOR,
+    INDICATOR_SIZE,
+    PIECE_SIZE,
+    WHITE_PIECE_COLOR,
+)
 
 
 class Cell(pygame.sprite.Sprite):

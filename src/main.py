@@ -1,10 +1,8 @@
 import pygame
 
 from game import Game
+from settings import BOARD_COLOR, HEIGHT, WIDTH
 from sprites import Board, PieceLayout
-
-WIDTH, HEIGHT = (605, 605)
-BOARD_COLOR = (77, 77, 77)
 
 if __name__ == "__main__":
     pygame.init()
