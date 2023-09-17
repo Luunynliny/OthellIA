@@ -1,7 +1,7 @@
 import pygame
 
 from game import Game
-from settings import BOARD_COLOR, HEIGHT, WIDTH
+from settings import BLACK_VALUE, BOARD_COLOR, HEIGHT, WHITE_VALUE, WIDTH
 from sprites import Board, PieceLayout
 
 if __name__ == "__main__":
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     board = Board()
     piece_layout = PieceLayout()
 
-    game = Game(WIDTH, HEIGHT)
+    game = Game()
 
     running = True
     is_black_turn = True
@@ -28,7 +28,10 @@ if __name__ == "__main__":
 
                 # Check if a piece can be played
                 if game.is_cell_empty(cell_index):
-                    game.play_piece(cell_index, is_black=is_black_turn)
+                    game.play_piece(
+                        cell_index,
+                        color=BLACK_VALUE if is_black_turn else WHITE_VALUE,
+                    )
 
                     # Next player turn
                     is_black_turn = not is_black_turn
