@@ -30,7 +30,7 @@ if __name__ == "__main__":
                 if game.is_cell_empty(cell_index):
                     game.play_piece(
                         cell_index,
-                        color=BLACK_VALUE if is_black_turn else WHITE_VALUE,
+                        value=BLACK_VALUE if is_black_turn else WHITE_VALUE,
                     )
 
                     # Next player turn
