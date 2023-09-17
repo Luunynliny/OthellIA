@@ -2,7 +2,7 @@ name: othellia
 channels:
   - conda-forge
 dependencies:
-  - pygame==2.1.2
-  - numpy==1.21.6
-  - pytest==7.4.2
-  - pytest-cov==4.1.0
+  - pygame
+  - numpy
+  - pytest
+  - pytest-cov
