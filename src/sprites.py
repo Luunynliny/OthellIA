@@ -102,6 +102,8 @@ class PieceLayout(pygame.sprite.Group):
         Args:
             cells (np.ndarray): board's cells.
         """
+        self.empty()
+
         for row in range(8):
             for col in range(8):
                 val = cells[row, col]
@@ -128,7 +130,7 @@ class Indicator(pygame.sprite.Sprite):
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-        # self.image.fill((255, 0, 0))
+
         pygame.draw.circle(
             self.image,
             color=INDICATOR_COLOR,
@@ -156,16 +158,16 @@ class IndicatorLayout(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
-        self.init_layout()
+    def update(self, indicators: np.ndarray):
+        """Update the indicator layout.
 
-    def init_layout(self):
-        """Initiliaze starting indicator layout."""
-        self.add(
-            Indicator(2, 3),
-            Indicator(3, 2),
-            Indicator(4, 5),
-            Indicator(5, 4),
-        )
+        Args:
+            indicators (np.ndarray): legal moves.
+        """
+        self.empty()
+
+        for row, col in indicators:
+            self.add(Indicator(row, col))
 
 
 class PhantomPiece(pygame.sprite.Sprite):

@@ -10,18 +10,61 @@ def game():
     return Game()
 
 
+def test_piece_values():
+    assert EMPTY_VALUE == 0
+    assert BLACK_VALUE == 1
+    assert WHITE_VALUE == -1
+
+
 def test_initialization(game):
     assert np.array_equal(
-        game.board, np.full((8, 8), EMPTY_VALUE, dtype=np.intc)
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.intc,
+        ),
+    )
+
+    assert np.array_equal(
+        game.indicators,
+        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
     )
 
 
 def test_reset_game(game):
     game.board[0:2, 5:6] = 1
+    game.indicators = np.append(game.indicators, (1, 1))
     game.reset_game()
 
     assert np.array_equal(
-        game.board, np.full((8, 8), EMPTY_VALUE, dtype=np.intc)
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=np.intc,
+        ),
+    )
+
+    assert np.array_equal(
+        game.indicators,
+        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
     )
 
 
@@ -51,10 +94,10 @@ def test_play_piece_black(game):
         np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, BLACK_VALUE, 0, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, -1, 1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -71,13 +114,37 @@ def test_play_piece_white(game):
         np.array(
             [
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, WHITE_VALUE, 0, 0, 0, 0, 0, 0],
+                [0, -1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, -1, 1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
             ]
         ),
+    )
+
+
+def test_is_move_legal(game):
+    legal_move = (3, 5)
+    illegal_move = (0, 0)
+
+    assert game.is_move_legal(legal_move)
+    assert not game.is_move_legal(illegal_move)
+
+
+def test_remove_indicator(game):
+    game.remove_indicator((2, 4))
+
+    assert np.array_equal(
+        game.indicators,
+        np.array([(3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+    )
+
+    game.remove_indicator((4, 2))
+
+    assert np.array_equal(
+        game.indicators,
+        np.array([(3, 5), (5, 3)], dtype=(int, 2)),
     )

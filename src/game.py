@@ -1,6 +1,6 @@
 import numpy as np
 
-from settings import EMPTY_VALUE, WIDTH
+from settings import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE, WIDTH
 
 
 class Game:
@@ -17,6 +17,15 @@ class Game:
     def reset_game(self):
         """Reset the game board into initial configuration."""
         self.board = np.full((8, 8), EMPTY_VALUE, dtype=np.intc)
+
+        self.play_piece((3, 3), value=BLACK_VALUE)
+        self.play_piece((4, 4), value=BLACK_VALUE)
+        self.play_piece((3, 4), value=WHITE_VALUE)
+        self.play_piece((4, 3), value=WHITE_VALUE)
+
+        self.indicators = np.array(
+            [(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)
+        )
 
     def mouse_pos_to_cell_index(self, pos: tuple[int, int]) -> tuple[int, int]:
         """Convert a mouse position into a cell index.
@@ -51,3 +60,24 @@ class Game:
             value (int): value of the piece.
         """
         self.board[cell_index] = value
+
+    def is_move_legal(self, cell_index: tuple[int, int]) -> bool:
+        """Ensure if a move is legal according to the current state of
+        the board.
+
+        Args:
+            cell_index (tuple[int, int]): row and column of the cell.
+
+        Returns:
+            bool: Legality of the move.
+        """
+        return np.any(np.all(self.indicators == cell_index, axis=1))
+
+    def remove_indicator(self, cell_index: tuple[int, int]):
+        """Remove indicator at a cell position.
+
+        Args:
+            cell_index (tuple[int, int]): row and column of the cell.
+        """
+        to_keep = np.any(self.indicators != cell_index, axis=1)
+        self.indicators = self.indicators[to_keep]
