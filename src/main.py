@@ -1,7 +1,9 @@
 import pygame
 
 from game import Game
-from settings import BLACK_VALUE, BOARD_COLOR, HEIGHT, WHITE_VALUE, WIDTH
+from settings.cell_values import BLACK_VALUE
+from settings.colors import BOARD_COLOR
+from settings.graphics import HEIGHT, WIDTH
 from sprites import Board, IndicatorLayout, PieceLayout
 
 if __name__ == "__main__":
@@ -16,7 +18,7 @@ if __name__ == "__main__":
     game = Game()
 
     running = True
-    is_black_turn = True
+    player_turn_value = BLACK_VALUE
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,15 +35,15 @@ if __name__ == "__main__":
                     if game.is_move_legal(cell_index):
                         game.play_piece(
                             cell_index,
-                            value=BLACK_VALUE
-                            if is_black_turn
-                            else WHITE_VALUE,
+                            player_turn_value,
                         )
 
-                        game.remove_indicator(cell_index)
-
                         # Next player turn
-                        is_black_turn = not is_black_turn
+                        player_turn_value *= -1
+
+                        game.update_surrounding_cells()
+                        game.update_sandwiches(player_turn_value)
+                        game.update_indicators()
 
         # Update graphics
         piece_layout.update(game.board)

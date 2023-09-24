@@ -1,16 +1,13 @@
 import numpy as np
 import pygame
 
-from settings import (
+from settings.colors import (
     BLACK_PIECE_COLOR,
     CELL_COLOR,
-    CELL_GAP,
-    CELL_SIZE,
     INDICATOR_COLOR,
-    INDICATOR_SIZE,
-    PIECE_SIZE,
     WHITE_PIECE_COLOR,
 )
+from settings.graphics import CELL_GAP, CELL_SIZE, INDICATOR_SIZE, PIECE_SIZE
 
 
 class Cell(pygame.sprite.Sprite):
