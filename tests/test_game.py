@@ -291,6 +291,18 @@ def test_search_cell_sandwich_towards(game):
         is None
     )
 
+    cell_index = (7, 4)
+    direction = (1, 0)
+
+    assert (
+        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction)
+        is None
+    )
+    assert (
+        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction)
+        is None
+    )
+
 
 def test_search_cell_sandwiches(game):
     cell_index = (5, 3)
@@ -436,6 +448,12 @@ def test_update_surrounding_cells(game):
             dtype=(int, 2),
         ),
     )
+
+    game.board.fill(BLACK_VALUE)
+
+    game.update_surrounding_cells()
+
+    assert game.surrounding_cells is None
 
 
 def test_update_sandwiches(game):

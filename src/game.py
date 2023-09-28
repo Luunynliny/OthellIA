@@ -148,7 +148,12 @@ class Game:
         consecutive = 0
         is_sandwich_end = False
 
-        for cell_value in self.cell_values_toward(cell_index, direction):
+        cvt = self.cell_values_toward(cell_index, direction)
+
+        if cvt is None:
+            return None
+
+        for cell_value in cvt:
             # Check for the end of the sandwich
             if cell_value == player_value:
                 is_sandwich_end = True
