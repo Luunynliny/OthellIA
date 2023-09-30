@@ -78,7 +78,7 @@ class Game:
         Returns:
             bool: Legality of the move.
         """
-        if self.indicators == []:
+        if np.array_equal(self.indicators, np.array([])):
             return False
 
         return np.any(np.all(self.indicators == cell_index, axis=1))
