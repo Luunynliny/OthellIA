@@ -732,3 +732,62 @@ def test_update_indicators(game):
             dtype=(int, 2),
         ),
     )
+
+
+def test_flip_sandwiches_from_indicator(game):
+    indicator_index = (4, 5)
+    game.flip_sandwiches_from_indicator(indicator_index)
+
+    assert np.array_equal(
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=int,
+        ),
+    )
+
+    game.board = np.array(
+        [
+            [-1, -1, -1, -1, -1, -1, -1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, -1],
+            [-1, 1, 0, 1, 1, 1, 1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, -1],
+            [-1, -1, -1, -1, -1, -1, -1, -1],
+        ],
+        dtype=int,
+    )
+
+    game.update_surrounding_cells()
+    game.update_sandwiches(WHITE_VALUE)
+    game.update_indicators()
+    indicator_index = (2, 5)
+    game.flip_sandwiches_from_indicator(indicator_index)
+
+    assert np.array_equal(
+        game.board,
+        np.array(
+            [
+                [-1, -1, -1, -1, -1, -1, -1, -1],
+                [-1, 1, -1, 1, 1, 1, -1, -1],
+                [-1, 1, -1, 1, 1, -1, 1, -1],
+                [-1, 1, -1, 1, -1, 1, 1, -1],
+                [-1, -1, -1, -1, 1, 1, 1, -1],
+                [-1, -1, 0, -1, -1, -1, -1, -1],
+                [-1, -1, -1, -1, 1, 1, 1, -1],
+                [-1, -1, -1, -1, -1, -1, -1, -1],
+            ],
+            dtype=int,
+        ),
+    )

@@ -306,3 +306,15 @@ class Game:
                 self.indicators.append((col, row))
 
             self.indicators = np.array(self.indicators, dtype=(int, 2))
+
+    def flip_sandwiches_from_indicator(self, indicator_index: tuple[int, int]):
+        """Flip all the pieces within the available sandwiches from an indicator's
+        location.
+
+        Args:
+            indicator_index (tuple[int, int]): column and row of an indicator.
+        """
+        key = f"{indicator_index[0]},{indicator_index[1]}"
+
+        for col, row in self.sandwiches.get(key):
+            self.board[row, col] *= -1

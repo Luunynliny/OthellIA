@@ -38,6 +38,9 @@ if __name__ == "__main__":
                             player_turn_value,
                         )
 
+                        # Flip sandwiches pieces
+                        game.flip_sandwiches_pieces(cell_index)
+
                         # Next player turn
                         player_turn_value *= -1
 
