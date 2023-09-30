@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-from utils import dict_to_str
 
 from game import Game
 from settings.board import BOARD_CELL_LENGTH
@@ -16,6 +15,7 @@ from settings.directions import (
     UP_RIGHT,
 )
 from settings.graphics import HEIGHT, WIDTH
+from utils.test import dict_to_str
 
 
 @pytest.fixture
@@ -37,8 +37,8 @@ def test_initialization(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -70,16 +70,16 @@ def test_initialization(game):
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
-            "2,4": np.array([[3, 4]]),
-            "3,5": np.array([[3, 4]]),
-            "4,2": np.array([[4, 3]]),
-            "5,3": np.array([[4, 3]]),
+            "2,3": np.array([[3, 3]]),
+            "3,2": np.array([[3, 3]]),
+            "4,5": np.array([[4, 4]]),
+            "5,4": np.array([[4, 4]]),
         }
     )
 
     assert np.array_equal(
         game.indicators,
-        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
 
@@ -95,8 +95,8 @@ def test_reset_game(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -128,16 +128,16 @@ def test_reset_game(game):
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
-            "2,4": np.array([[3, 4]]),
-            "3,5": np.array([[3, 4]]),
-            "4,2": np.array([[4, 3]]),
-            "5,3": np.array([[4, 3]]),
+            "2,3": np.array([[3, 3]]),
+            "3,2": np.array([[3, 3]]),
+            "4,5": np.array([[4, 4]]),
+            "5,4": np.array([[4, 4]]),
         }
     )
 
     assert np.array_equal(
         game.indicators,
-        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
 
@@ -169,8 +169,8 @@ def test_play_piece_black(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -189,8 +189,8 @@ def test_play_piece_white(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, -1, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, -1, 1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -200,7 +200,7 @@ def test_play_piece_white(game):
 
 
 def test_is_move_legal(game):
-    legal_move = (3, 5)
+    legal_move = (3, 2)
     illegal_move = (0, 0)
 
     assert game.is_move_legal(legal_move)
@@ -282,13 +282,13 @@ def test_search_cell_sandwich_towards(game):
     cell_index = (3, 5)
     direction = (0, -1)
 
-    assert np.array_equal(
-        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction),
-        np.array([(3, 4)], dtype=(int, 2)),
-    )
     assert (
-        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction)
+        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction)
         is None
+    )
+    assert np.array_equal(
+        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction),
+        np.array([(3, 4)], dtype=(int, 2)),
     )
 
     cell_index = (7, 4)
@@ -307,11 +307,11 @@ def test_search_cell_sandwich_towards(game):
 def test_search_cell_sandwiches(game):
     cell_index = (5, 3)
 
+    assert game.search_cell_sandwiches(cell_index, BLACK_VALUE) is None
     assert np.array_equal(
-        game.search_cell_sandwiches(cell_index, BLACK_VALUE),
+        game.search_cell_sandwiches(cell_index, WHITE_VALUE),
         np.array([(4, 3)], dtype=(int, 2)),
     )
-    assert game.search_cell_sandwiches(cell_index, WHITE_VALUE) is None
 
     game.board = np.array(
         [
@@ -461,10 +461,10 @@ def test_update_sandwiches(game):
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
-            "2,4": np.array([[3, 4]]),
-            "3,5": np.array([[3, 4]]),
-            "4,2": np.array([[4, 3]]),
-            "5,3": np.array([[4, 3]]),
+            "2,3": np.array([[3, 3]]),
+            "3,2": np.array([[3, 3]]),
+            "4,5": np.array([[4, 4]]),
+            "5,4": np.array([[4, 4]]),
         }
     )
 
@@ -472,10 +472,10 @@ def test_update_sandwiches(game):
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
-            "2,3": np.array([[3, 3]]),
-            "3,2": np.array([[3, 3]]),
-            "4,5": np.array([[4, 4]]),
-            "5,4": np.array([[4, 4]]),
+            "2,4": np.array([[3, 4]]),
+            "3,5": np.array([[3, 4]]),
+            "4,2": np.array([[4, 3]]),
+            "5,3": np.array([[4, 3]]),
         }
     )
 
@@ -495,7 +495,7 @@ def test_update_indicators(game):
 
     assert np.array_equal(
         game.indicators,
-        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
     game.update_sandwiches(WHITE_VALUE)
@@ -503,7 +503,7 @@ def test_update_indicators(game):
 
     assert np.array_equal(
         game.indicators,
-        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
+        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
     )
 
     game.board.fill(BLACK_VALUE)

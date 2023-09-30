@@ -23,10 +23,10 @@ class Game:
             (BOARD_CELL_LENGTH, BOARD_CELL_LENGTH), EMPTY_VALUE, dtype=int
         )
 
-        self.play_piece((3, 3), BLACK_VALUE)
-        self.play_piece((4, 4), BLACK_VALUE)
-        self.play_piece((3, 4), WHITE_VALUE)
-        self.play_piece((4, 3), WHITE_VALUE)
+        self.play_piece((3, 3), WHITE_VALUE)
+        self.play_piece((4, 4), WHITE_VALUE)
+        self.play_piece((3, 4), BLACK_VALUE)
+        self.play_piece((4, 3), BLACK_VALUE)
 
         self.update_surrounding_cells()
         self.update_sandwiches(BLACK_VALUE)
