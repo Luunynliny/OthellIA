@@ -206,6 +206,36 @@ def test_is_move_legal(game):
     assert game.is_move_legal(legal_move)
     assert not game.is_move_legal(illegal_move)
 
+    game.board.fill(BLACK_VALUE)
+    game.update_surrounding_cells()
+    game.update_sandwiches(WHITE_VALUE)
+    game.update_indicators()
+    move = np.random.randint(BOARD_CELL_LENGTH, size=2)
+
+    assert not game.is_move_legal(move)
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, -1, 1, 0, 0],
+            [0, 0, 1, -1, 1, 0, 0, 0],
+            [0, 0, -1, 1, -1, 0, 0, 0],
+            [0, 0, 0, -1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.update_surrounding_cells()
+    game.update_sandwiches(WHITE_VALUE)
+    game.update_indicators()
+    legal_move = (4, 6)
+    illegal_move = (1, 5)
+
+    assert game.is_move_legal(legal_move)
+    assert not game.is_move_legal(illegal_move)
+
 
 def test_cell_values_toward(game):
     game.board = np.arange(25).reshape(5, 5)

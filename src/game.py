@@ -78,6 +78,9 @@ class Game:
         Returns:
             bool: Legality of the move.
         """
+        if self.indicators == []:
+            return False
+
         return np.any(np.all(self.indicators == cell_index, axis=1))
 
     def update_sandwiches(self, player_value: int):
