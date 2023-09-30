@@ -39,7 +39,7 @@ class Game:
             pos (tuple[int, int]): x and y coordinates.
 
         Returns:
-            tuple[int, int]: row and column indices.
+            tuple[int, int]: column and row indices.
         """
         x, y = pos
         cell_size = WIDTH / BOARD_CELL_LENGTH
@@ -50,28 +50,30 @@ class Game:
         """Check if a cell doesn't contain  a piece.
 
         Args:
-            cell_index (tuple[int, int]): cell's row and column.
+            cell_index (tuple[int, int]): cell's column and row.
 
         Returns:
             bool: non-presence of a piece.
         """
-        return self.board[cell_index] == EMPTY_VALUE
+        col, row = cell_index
+        return self.board[row, col] == EMPTY_VALUE
 
     def play_piece(self, cell_index: tuple[int, int], player_value: int):
         """Play a piece in a cell.
 
         Args:
-            cell_index (tuple[int, int]): cell's row and column.
+            cell_index (tuple[int, int]): cell's column and row.
             player_value (int): value of the piece.
         """
-        self.board[cell_index] = player_value
+        col, row = cell_index
+        self.board[row, col] = player_value
 
     def is_move_legal(self, cell_index: tuple[int, int]) -> bool:
         """Ensure if a move is legal according to the current state of
         the board.
 
         Args:
-            cell_index (tuple[int, int]): cell's row and column.
+            cell_index (tuple[int, int]): cell's column and row.
 
         Returns:
             bool: Legality of the move.
@@ -107,7 +109,7 @@ class Game:
         """Find all possible sandwiches from a single cell.
 
         Args:
-            cell_index (tuple[int, int]): cell's row and column.
+            cell_index (tuple[int, int]): cell's column and row.
             player_value (int): value of the piece.
 
         Returns:
@@ -138,7 +140,7 @@ class Game:
         """Find if a sanwich, if possible, in a given directory from a cell.
 
         Args:
-            cell_index (tuple[int, int]): row and colum of the cell.
+            cell_index (tuple[int, int]): column and row of the cell.
             player_value (int): value of the piece.
             direction (tuple[int, int]): direction of the search.
 
@@ -186,7 +188,7 @@ class Game:
         """Return all the cells value toward a cell in a given direction.
 
         Args:
-            cell_index (tuple[int, int]): row anc column of the cell.
+            cell_index (tuple[int, int]): column and row of the cell.
             direction (tuple[int, int]): direction of the search.
 
         Returns:
@@ -237,7 +239,7 @@ class Game:
         """Return all non-empty cells on the board.
 
         Returns:
-            np.ndarray | None: cells row and column, None if no empty cells.
+            np.ndarray | None: cells column and row, None if no empty cells.
         """
         cells = []
 
@@ -248,7 +250,7 @@ class Game:
                 if value == EMPTY_VALUE:
                     continue
 
-                cells.append((row, col))
+                cells.append((col, row))
 
         return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
 
@@ -258,10 +260,10 @@ class Game:
         """Retrieve all the empty neighbors of a given cell.
 
         Args:
-            cell_index (tuple[int, int]): cell's row and column.
+            cell_index (tuple[int, int]): cell's column and row.
 
         Returns:
-            np.ndarray | None: cells row and column, None if no empty neighbors.
+            np.ndarray | None: cells column and row, None if no empty neighbors.
         """
         row, col = cell_index
         neighbors = []
@@ -285,7 +287,7 @@ class Game:
                 ):
                     continue
 
-                if self.board[nx, ny] != EMPTY_VALUE:
+                if self.board[ny, nx] != EMPTY_VALUE:
                     continue
 
                 neighbors.append((nx, ny))
@@ -300,7 +302,7 @@ class Game:
 
         if len(self.sandwiches) > 0:
             for k in self.sandwiches.keys():
-                row, col = list(map(int, k.split(",")))
-                self.indicators.append((row, col))
+                col, row = list(map(int, k.split(",")))
+                self.indicators.append((col, row))
 
             self.indicators = np.array(self.indicators, dtype=(int, 2))

@@ -109,7 +109,7 @@ class PieceLayout(pygame.sprite.Group):
                 if val == 0:
                     continue
 
-                self.add(Piece(row, col, is_black=(val == 1)))
+                self.add(Piece(col, row, is_black=(val == 1)))
 
 
 class Indicator(pygame.sprite.Sprite):
