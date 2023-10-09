@@ -321,3 +321,14 @@ class Game:
 
         for col, row in self.sandwiches.get(key):
             self.board[row, col] *= -1
+
+    def is_player_able_to_play(self, player_value) -> bool:
+        """Check if a player has legal moves to play.
+
+        Args:
+            player_value (int): value of the player.
+
+        Returns:
+            bool : wether or not the player is able to play.
+        """
+        return not np.array_equal(self.indicators, np.array([]))

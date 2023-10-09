@@ -48,6 +48,19 @@ if __name__ == "__main__":
                         game.update_sandwiches(player_turn_value)
                         game.update_indicators()
 
+                        # Check for skipping turn
+                        if not game.is_player_able_to_play(player_turn_value):
+                            player_turn_value *= -1
+
+                            game.update_sandwiches(player_turn_value)
+                            game.update_indicators()
+
+                            if not game.is_player_able_to_play(
+                                player_turn_value
+                            ):
+                                # Neither player has legal moves left
+                                running = False
+
         # Update graphics
         piece_layout.update(game.board)
         indicator_layout.update(game.indicators)

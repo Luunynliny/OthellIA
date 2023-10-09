@@ -821,3 +821,36 @@ def test_flip_sandwiches_from_indicator(game):
             dtype=int,
         ),
     )
+
+
+def test_is_player_able_to_play(game):
+    assert game.is_player_able_to_play(BLACK_VALUE)
+
+    game.update_sandwiches(WHITE_VALUE)
+    game.update_indicators()
+
+    assert game.is_player_able_to_play(WHITE_VALUE)
+
+    game.board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.update_surrounding_cells()
+    game.update_sandwiches(BLACK_VALUE)
+    game.update_indicators()
+
+    assert not game.is_player_able_to_play(BLACK_VALUE)
+
+    game.update_sandwiches(WHITE_VALUE)
+    game.update_indicators()
+
+    assert not game.is_player_able_to_play(WHITE_VALUE)
