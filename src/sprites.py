@@ -1,13 +1,25 @@
 import numpy as np
 import pygame
 
+from settings.cell_values import BLACK_VALUE
 from settings.colors import (
     BLACK_PIECE_COLOR,
     CELL_COLOR,
+    ENDGAME_MESSAGE_BACKGROUND_COLOR,
+    ENDGAME_MESSAGE_BLACK_VICTORY_COLOR,
+    ENDGAME_MESSAGE_DRAW_COLOR,
+    ENDGAME_MESSAGE_WHITE_VICTORY_COLOR,
     INDICATOR_COLOR,
     WHITE_PIECE_COLOR,
 )
-from settings.graphics import CELL_GAP, CELL_SIZE, INDICATOR_SIZE, PIECE_SIZE
+from settings.graphics import (
+    BOARD_SIZE,
+    CELL_GAP,
+    CELL_SIZE,
+    ENDGAME_MESSAGE_SIZE,
+    INDICATOR_SIZE,
+    PIECE_SIZE,
+)
 
 
 class Cell(pygame.sprite.Sprite):
@@ -201,6 +213,47 @@ class PhantomPiece(pygame.sprite.Sprite):
             row * CELL_SIZE + (row + 1) * CELL_GAP,
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
+
+class EndgameMessage(pygame.sprite.Sprite):
+    """Sprite of the endgame message notifying the result of the game.
+
+    Args:
+        player_value (int | None): value of the player who won, None if draw.
+    """
+
+    def __init__(self, player_value: int | None):
+        super().__init__()
+
+        self.image = pygame.Surface((BOARD_SIZE, BOARD_SIZE), pygame.SRCALPHA)
+        self.image.fill((*ENDGAME_MESSAGE_BACKGROUND_COLOR, 255 / 1.5))
+
+        label = (
+            "DRAW"
+            if player_value is None
+            else "BLACK won"
+            if player_value == BLACK_VALUE
+            else "WHITE won"
+        )
+        label_color = (
+            ENDGAME_MESSAGE_DRAW_COLOR
+            if player_value is None
+            else ENDGAME_MESSAGE_BLACK_VICTORY_COLOR
+            if player_value == BLACK_VALUE
+            else ENDGAME_MESSAGE_WHITE_VICTORY_COLOR
+        )
+
+        font = pygame.font.SysFont("Verdana", ENDGAME_MESSAGE_SIZE, bold=True)
+        text = font.render(label, True, label_color)
+        text_rect = text.get_rect(center=(BOARD_SIZE / 2, BOARD_SIZE / 2))
+
+        self.image.blit(text, text_rect)
+
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (0, 0)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)

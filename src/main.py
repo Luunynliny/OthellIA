@@ -4,7 +4,7 @@ from game import Game
 from settings.cell_values import BLACK_VALUE
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
-from sprites import Board, IndicatorLayout, PieceLayout
+from sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
 
 if __name__ == "__main__":
     pygame.init()
@@ -14,6 +14,8 @@ if __name__ == "__main__":
     board = Board()
     piece_layout = PieceLayout()
     indicator_layout = IndicatorLayout()
+
+    victory_message_black = EndgameMessage(None)
 
     game = Game()
 
@@ -71,6 +73,8 @@ if __name__ == "__main__":
         board.draw(screen)
         piece_layout.draw(screen)
         indicator_layout.draw(screen)
+
+        victory_message_black.draw(screen)
 
         pygame.display.flip()
 
