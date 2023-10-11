@@ -1,7 +1,7 @@
 import pygame
 
 from game import Game
-from settings.cell_values import BLACK_VALUE
+from settings.cell_values import BLACK_VALUE, WHITE_VALUE
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
 from sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
@@ -15,12 +15,16 @@ if __name__ == "__main__":
     piece_layout = PieceLayout()
     indicator_layout = IndicatorLayout()
 
-    victory_message_black = EndgameMessage(None)
+    endgame_message_black_won = EndgameMessage(BLACK_VALUE)
+    endgame_message_white_won = EndgameMessage(WHITE_VALUE)
+    endgame_message_draw = EndgameMessage(None)
 
     game = Game()
 
     running = True
+    is_game_over = False
     player_turn_value = BLACK_VALUE
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,7 +65,7 @@ if __name__ == "__main__":
                                 player_turn_value
                             ):
                                 # Neither player has legal moves left
-                                running = False
+                                is_game_over = True
 
         # Update graphics
         piece_layout.update(game.board)
@@ -74,7 +78,14 @@ if __name__ == "__main__":
         piece_layout.draw(screen)
         indicator_layout.draw(screen)
 
-        victory_message_black.draw(screen)
+        if is_game_over:
+            match game.get_winner_player_value():
+                case 1:  # BLACK_PIECE_VALUE
+                    endgame_message_black_won.draw(screen)
+                case -1:  # WHITE_PIECE_VALUE
+                    endgame_message_white_won.draw(screen)
+                case 0:
+                    endgame_message_draw.draw(screen)
 
         pygame.display.flip()
 

@@ -332,3 +332,43 @@ class Game:
             bool : wether or not the player is able to play.
         """
         return not np.array_equal(self.indicators, np.array([]))
+
+    def get_black_piece_count(self) -> int:
+        """Return the number of black pieces on the board.
+
+        Returns:
+            int: number of black pieces.
+        """
+        return (self.board == BLACK_VALUE).sum()
+
+    def get_white_piece_count(self) -> int:
+        """Return the number of white pieces on the board.
+
+        Returns:
+            int: number of black pieces.
+        """
+        return (self.board == WHITE_VALUE).sum()
+
+    def get_winner_player_value(self) -> int | None:
+        """Return the value of the player who won the game.
+
+        Returns:
+            int | None: value of the player who won the game, 0 if draw, None if the
+            game is not finished.
+        """
+        # Check if the game has ended
+        if not np.array_equal(self.indicators, np.array([])):
+            return None
+
+        black_piece_count = self.get_black_piece_count()
+        white_piece_count = self.get_white_piece_count()
+
+        # Draw
+        if black_piece_count == white_piece_count:
+            return 0
+
+        return (
+            BLACK_VALUE
+            if black_piece_count > white_piece_count
+            else WHITE_VALUE
+        )

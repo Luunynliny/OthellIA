@@ -854,3 +854,114 @@ def test_is_player_able_to_play(game):
     game.update_indicators()
 
     assert not game.is_player_able_to_play(WHITE_VALUE)
+
+
+def test_get_black_piece_count(game):
+    assert game.get_black_piece_count() == 2
+
+    game.board.fill(EMPTY_VALUE)
+
+    assert game.get_black_piece_count() == 0
+
+    game.board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_black_piece_count() == 24
+
+
+def test_get_white_piece_count(game):
+    assert game.get_white_piece_count() == 2
+
+    game.board.fill(EMPTY_VALUE)
+
+    assert game.get_white_piece_count() == 0
+
+    game.board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_white_piece_count() == 24
+
+
+def test_get_winner_player_value(game):
+    assert game.get_winner_player_value() is None
+
+    game.board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.update_surrounding_cells()
+    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.update_indicators()
+
+    assert game.get_winner_player_value() == 0
+
+    game.board = np.array(
+        [
+            [-1, -1, -1, -1, -1, -1, 1, -1],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, -1, 1, -1, -1, -1, 1, -1],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, -1, 1, -1, 1, -1, 1, -1],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, -1, -1, -1, 1, -1, 1, -1],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+
+    game.update_surrounding_cells()
+    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.update_indicators()
+
+    assert game.get_winner_player_value() == WHITE_VALUE
+
+    game.board = np.array(
+        [
+            [-1, 1, -1, 1, -1, 1, 1, 1],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 1, 1, 1, -1, 1, 1, 1],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 1, -1, 1, 1, 1, 1, 1],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+
+    game.update_surrounding_cells()
+    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.update_indicators()
+
+    assert game.get_winner_player_value() == BLACK_VALUE
