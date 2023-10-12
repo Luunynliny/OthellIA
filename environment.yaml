@@ -1,0 +1,8 @@
+name: othellia
+channels:
+  - conda-forge
+dependencies:
+  - pygame
+  - numpy
+  - pytest
+  - pytest-cov

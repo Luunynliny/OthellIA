@@ -1,15 +1,25 @@
+import numpy as np
 import pygame
 
-BOARD_SIZE = 605
-CELL_SIZE = 70
-CELL_GAP = 5
-PIECE_SIZE = 60
-INDICATOR_SIZE = 25
-
-CELL_COLOR = (141, 187, 100)
-BLACK_PIECE_COLOR = (47, 54, 64)
-WHITE_PIECE_COLOR = (245, 246, 250)
-INDICATOR_COLOR = (159, 100, 187)
+from settings.cell_values import BLACK_VALUE
+from settings.colors import (
+    BLACK_PIECE_COLOR,
+    CELL_COLOR,
+    ENDGAME_MESSAGE_BACKGROUND_COLOR,
+    ENDGAME_MESSAGE_BLACK_VICTORY_COLOR,
+    ENDGAME_MESSAGE_DRAW_COLOR,
+    ENDGAME_MESSAGE_WHITE_VICTORY_COLOR,
+    INDICATOR_COLOR,
+    WHITE_PIECE_COLOR,
+)
+from settings.graphics import (
+    BOARD_SIZE,
+    CELL_GAP,
+    CELL_SIZE,
+    ENDGAME_MESSAGE_SIZE,
+    INDICATOR_SIZE,
+    PIECE_SIZE,
+)
 
 
 class Cell(pygame.sprite.Sprite):
@@ -95,16 +105,23 @@ class PieceLayout(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
-        self.init_layout()
+    def update(self, cells: np.ndarray):
+        """Update the piece layout according the content of all board's cells.
 
-    def init_layout(self):
-        """Initiliaze starting piece layout."""
-        self.add(
-            Piece(3, 3, is_black=False),
-            Piece(3, 4, is_black=True),
-            Piece(4, 3, is_black=True),
-            Piece(4, 4, is_black=False),
-        )
+        Args:
+            cells (np.ndarray): board's cells.
+        """
+        self.empty()
+
+        for row in range(8):
+            for col in range(8):
+                val = cells[row, col]
+
+                # Check empty cell
+                if val == 0:
+                    continue
+
+                self.add(Piece(col, row, is_black=(val == 1)))
 
 
 class Indicator(pygame.sprite.Sprite):
@@ -122,7 +139,7 @@ class Indicator(pygame.sprite.Sprite):
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
-        # self.image.fill((255, 0, 0))
+
         pygame.draw.circle(
             self.image,
             color=INDICATOR_COLOR,
@@ -150,16 +167,16 @@ class IndicatorLayout(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
-        self.init_layout()
+    def update(self, indicators: np.ndarray):
+        """Update the indicator layout.
 
-    def init_layout(self):
-        """Initiliaze starting indicator layout."""
-        self.add(
-            Indicator(2, 3),
-            Indicator(3, 2),
-            Indicator(4, 5),
-            Indicator(5, 4),
-        )
+        Args:
+            indicators (np.ndarray): legal moves.
+        """
+        self.empty()
+
+        for row, col in indicators:
+            self.add(Indicator(row, col))
 
 
 class PhantomPiece(pygame.sprite.Sprite):
@@ -196,6 +213,47 @@ class PhantomPiece(pygame.sprite.Sprite):
             row * CELL_SIZE + (row + 1) * CELL_GAP,
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
+
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
+
+class EndgameMessage(pygame.sprite.Sprite):
+    """Sprite of the endgame message notifying the result of the game.
+
+    Args:
+        player_value (int | None): value of the player who won, None if draw.
+    """
+
+    def __init__(self, player_value: int | None):
+        super().__init__()
+
+        self.image = pygame.Surface((BOARD_SIZE, BOARD_SIZE), pygame.SRCALPHA)
+        self.image.fill((*ENDGAME_MESSAGE_BACKGROUND_COLOR, 255 / 1.5))
+
+        label = (
+            "DRAW"
+            if player_value is None
+            else "BLACK won"
+            if player_value == BLACK_VALUE
+            else "WHITE won"
+        )
+        label_color = (
+            ENDGAME_MESSAGE_DRAW_COLOR
+            if player_value is None
+            else ENDGAME_MESSAGE_BLACK_VICTORY_COLOR
+            if player_value == BLACK_VALUE
+            else ENDGAME_MESSAGE_WHITE_VICTORY_COLOR
+        )
+
+        font = pygame.font.SysFont("Verdana", ENDGAME_MESSAGE_SIZE, bold=True)
+        text = font.render(label, True, label_color)
+        text_rect = text.get_rect(center=(BOARD_SIZE / 2, BOARD_SIZE / 2))
+
+        self.image.blit(text, text_rect)
+
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (0, 0)
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
