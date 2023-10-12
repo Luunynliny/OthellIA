@@ -1,9 +1,12 @@
+from textwrap import wrap
+
 import numpy as np
 
 from settings.board import BOARD_CELL_LENGTH
 from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from settings.directions import DIRECTIONS
 from settings.graphics import WIDTH
+from utils.game import notation_to_cell_index
 
 
 class Game:
@@ -377,3 +380,12 @@ class Game:
             if not self.is_player_able_to_play():
                 # Neither player has legal moves left
                 self.is_over = True
+
+    def load_transcript(self, transcript: str):
+        """Play each player move from a match transcription.
+
+        Args:
+            transcript (str): sequence of moves.
+        """
+        for move in wrap(transcript, 2):
+            self.play_piece(notation_to_cell_index(move))

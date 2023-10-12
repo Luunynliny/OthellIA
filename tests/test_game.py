@@ -4,16 +4,8 @@ import pytest
 from game import Game
 from settings.board import BOARD_CELL_LENGTH
 from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
-from settings.directions import (
-    DOWN,
-    DOWN_LEFT,
-    DOWN_RIGHT,
-    LEFT,
-    RIGHT,
-    UP,
-    UP_LEFT,
-    UP_RIGHT,
-)
+from settings.directions import (DOWN, DOWN_LEFT, DOWN_RIGHT, LEFT, RIGHT, UP,
+                                 UP_LEFT, UP_RIGHT)
 from settings.graphics import HEIGHT, WIDTH
 from utils.test import dict_to_str
 
@@ -989,3 +981,26 @@ def test_next_player_turn(game):
     game.next_player_turn()
 
     assert game.player_value == BLACK_VALUE and game.is_over
+
+
+def test_load_transcript(game):
+    t = "c4e3f6e6"
+    game.load_transcript(t)
+
+    assert np.array_equal(
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, -1, 0, 0, 0],
+                [0, 0, 1, 1, -1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, 0, -1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=int,
+        ),
+    )
+    assert game.player_value == BLACK_VALUE
