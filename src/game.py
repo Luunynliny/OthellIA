@@ -7,12 +7,7 @@ from settings.graphics import WIDTH
 
 
 class Game:
-    """Class gathering all the game's behaviours.
-
-    Args:
-        width (int): width of the board.
-        height (int): height if the board.
-    """
+    """Class gathering all the game's behaviours."""
 
     def __init__(self):
         self.reset_game()
@@ -23,14 +18,15 @@ class Game:
             (BOARD_CELL_LENGTH, BOARD_CELL_LENGTH), EMPTY_VALUE, dtype=int
         )
 
-        self.play_piece((3, 3), WHITE_VALUE)
-        self.play_piece((4, 4), WHITE_VALUE)
-        self.play_piece((3, 4), BLACK_VALUE)
-        self.play_piece((4, 3), BLACK_VALUE)
+        self.board[3, 3] = WHITE_VALUE
+        self.board[4, 4] = WHITE_VALUE
+        self.board[3, 4] = BLACK_VALUE
+        self.board[4, 3] = BLACK_VALUE
 
-        self.update_surrounding_cells()
-        self.update_sandwiches(BLACK_VALUE)
-        self.update_indicators()
+        self.player_value = BLACK_VALUE
+        self.update_ssi()
+
+        self.is_over = False
 
     def mouse_pos_to_cell_index(self, pos: tuple[int, int]) -> tuple[int, int]:
         """Convert a mouse position into a cell index.
@@ -58,15 +54,20 @@ class Game:
         col, row = cell_index
         return self.board[row, col] == EMPTY_VALUE
 
-    def play_piece(self, cell_index: tuple[int, int], player_value: int):
-        """Play a piece in a cell.
+    def play_piece(self, cell_index: tuple[int, int]):
+        """Play a piece in a cell and update the board according.
 
         Args:
             cell_index (tuple[int, int]): cell's column and row.
-            player_value (int): value of the piece.
         """
         col, row = cell_index
-        self.board[row, col] = player_value
+        self.board[row, col] = self.player_value
+
+        self.flip_sandwiches(cell_index)
+
+        self.next_player_turn()
+
+        self.update_ssi()
 
     def is_move_legal(self, cell_index: tuple[int, int]) -> bool:
         """Ensure if a move is legal according to the current state of
@@ -83,11 +84,8 @@ class Game:
 
         return np.any(np.all(self.indicators == cell_index, axis=1))
 
-    def update_sandwiches(self, player_value: int):
+    def update_sandwiches(self):
         """Find all the sandwiches from available legal moves.
-
-        Args:
-            player_value (int): value of the piece.
 
         Returns:
             dict: sanwdiches for each possible move.
@@ -96,9 +94,7 @@ class Game:
 
         if self.surrounding_cells is not None:
             for cell_index in self.surrounding_cells:
-                cell_sandwiches = self.search_cell_sandwiches(
-                    cell_index, player_value
-                )
+                cell_sandwiches = self.search_cell_sandwiches(cell_index)
 
                 if cell_sandwiches is None:
                     continue
@@ -107,13 +103,12 @@ class Game:
                 self.sandwiches[f"{x},{y}"] = cell_sandwiches
 
     def search_cell_sandwiches(
-        self, cell_index: tuple[int, int], player_value: int
+        self, cell_index: tuple[int, int]
     ) -> np.ndarray | None:
         """Find all possible sandwiches from a single cell.
 
         Args:
             cell_index (tuple[int, int]): cell's column and row.
-            player_value (int): value of the piece.
 
         Returns:
             np.ndarray | None: cell indices within the sandwiches,
@@ -124,7 +119,7 @@ class Game:
         # Loop for sandwiches in all directions
         for direction in DIRECTIONS:
             cell_indices = self.search_cell_sandwich_towards(
-                cell_index, player_value, direction
+                cell_index, direction
             )
 
             if cell_indices is None:
@@ -137,14 +132,12 @@ class Game:
     def search_cell_sandwich_towards(
         self,
         cell_index: tuple[int, int],
-        player_value: int,
         direction: tuple[int, int],
     ) -> np.ndarray | None:
         """Find if a sanwich, if possible, in a given directory from a cell.
 
         Args:
             cell_index (tuple[int, int]): column and row of the cell.
-            player_value (int): value of the piece.
             direction (tuple[int, int]): direction of the search.
 
         Returns:
@@ -160,12 +153,12 @@ class Game:
 
         for cell_value in cvt:
             # Check for the end of the sandwich
-            if cell_value == player_value:
+            if cell_value == self.player_value:
                 is_sandwich_end = True
                 break
 
             # Check if the cell has the opponent colour
-            if cell_value != -player_value:
+            if cell_value != -self.player_value:
                 break
 
             consecutive += 1
@@ -310,7 +303,7 @@ class Game:
 
             self.indicators = np.array(self.indicators, dtype=(int, 2))
 
-    def flip_sandwiches_from_indicator(self, indicator_index: tuple[int, int]):
+    def flip_sandwiches(self, indicator_index: tuple[int, int]):
         """Flip all the pieces within the available sandwiches from an indicator's
         location.
 
@@ -322,11 +315,8 @@ class Game:
         for col, row in self.sandwiches.get(key):
             self.board[row, col] *= -1
 
-    def is_player_able_to_play(self, player_value) -> bool:
+    def is_player_able_to_play(self) -> bool:
         """Check if a player has legal moves to play.
-
-        Args:
-            player_value (int): value of the player.
 
         Returns:
             bool : wether or not the player is able to play.
@@ -349,17 +339,12 @@ class Game:
         """
         return (self.board == WHITE_VALUE).sum()
 
-    def get_winner_player_value(self) -> int | None:
+    def get_winner(self) -> int:
         """Return the value of the player who won the game.
 
         Returns:
-            int | None: value of the player who won the game, 0 if draw, None if the
-            game is not finished.
+            int: value of the player who won the game, 0 if draw.
         """
-        # Check if the game has ended
-        if not np.array_equal(self.indicators, np.array([])):
-            return None
-
         black_piece_count = self.get_black_piece_count()
         white_piece_count = self.get_white_piece_count()
 
@@ -372,3 +357,23 @@ class Game:
             if black_piece_count > white_piece_count
             else WHITE_VALUE
         )
+
+    def update_ssi(self):
+        """Updates the game surrounding cells, sandwiches and indicators."""
+        self.update_surrounding_cells()
+        self.update_sandwiches()
+        self.update_indicators()
+
+    def next_player_turn(self):
+        """Update the next player value or declare the game over."""
+        self.player_value *= -1
+        self.update_ssi()
+
+        # Check for skipping turn
+        if not self.is_player_able_to_play():
+            self.player_value *= -1
+            self.update_ssi()
+
+            if not self.is_player_able_to_play():
+                # Neither player has legal moves left
+                self.is_over = True

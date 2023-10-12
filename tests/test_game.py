@@ -82,6 +82,8 @@ def test_initialization(game):
         np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
+    assert not game.is_over
+
 
 def test_reset_game(game):
     game.board[0:2, 5:6] = 1
@@ -140,6 +142,8 @@ def test_reset_game(game):
         np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
+    assert not game.is_over
+
 
 def test_mouse_pos_to_cell_index(game):
     assert game.mouse_pos_to_cell_index((0, 0)) == (0, 0)
@@ -159,8 +163,9 @@ def test_is_cell_empty(game):
     assert not game.is_cell_empty((2, 2))
 
 
-def test_play_piece_black(game):
-    game.play_piece((4, 7), BLACK_VALUE)
+def test_play_piece(game):
+    game.player_value = BLACK_VALUE
+    game.play_piece((4, 5))
 
     assert np.array_equal(
         game.board,
@@ -170,17 +175,16 @@ def test_play_piece_black(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, -1, 1, 0, 0, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0],
                 [0, 0, 0, 0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
             ]
         ),
     )
 
-
-def test_play_piece_white(game):
-    game.play_piece((6, 3), WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.play_piece((5, 3))
 
     assert np.array_equal(
         game.board,
@@ -189,9 +193,9 @@ def test_play_piece_white(game):
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, -1, 1, 0, -1, 0],
-                [0, 0, 0, 1, -1, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, -1, -1, -1, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
             ]
@@ -207,9 +211,7 @@ def test_is_move_legal(game):
     assert not game.is_move_legal(illegal_move)
 
     game.board.fill(BLACK_VALUE)
-    game.update_surrounding_cells()
-    game.update_sandwiches(WHITE_VALUE)
-    game.update_indicators()
+    game.update_ssi()
     move = np.random.randint(BOARD_CELL_LENGTH, size=2)
 
     assert not game.is_move_legal(move)
@@ -227,9 +229,8 @@ def test_is_move_legal(game):
         ],
         dtype=int,
     )
-    game.update_surrounding_cells()
-    game.update_sandwiches(WHITE_VALUE)
-    game.update_indicators()
+    game.player_value = WHITE_VALUE
+    game.update_ssi()
     legal_move = (4, 6)
     illegal_move = (1, 5)
 
@@ -300,46 +301,47 @@ def test_search_cell_sandwich_towards(game):
     cell_index = (2, 2)
     direction = (1, 1)
 
-    assert (
-        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction)
-        is None
-    )
-    assert (
-        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction)
-        is None
-    )
+    assert game.search_cell_sandwich_towards(cell_index, direction) is None
+
+    game.player_value = WHITE_VALUE
+
+    assert game.search_cell_sandwich_towards(cell_index, direction) is None
 
     cell_index = (3, 5)
     direction = (0, -1)
 
-    assert (
-        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction)
-        is None
-    )
+    game.player_value = BLACK_VALUE
+
+    assert game.search_cell_sandwich_towards(cell_index, direction) is None
+
+    game.player_value = WHITE_VALUE
+
     assert np.array_equal(
-        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction),
+        game.search_cell_sandwich_towards(cell_index, direction),
         np.array([(3, 4)], dtype=(int, 2)),
     )
 
     cell_index = (7, 4)
     direction = (1, 0)
 
-    assert (
-        game.search_cell_sandwich_towards(cell_index, BLACK_VALUE, direction)
-        is None
-    )
-    assert (
-        game.search_cell_sandwich_towards(cell_index, WHITE_VALUE, direction)
-        is None
-    )
+    game.player_value = BLACK_VALUE
+
+    assert game.search_cell_sandwich_towards(cell_index, direction) is None
+
+    game.player_value = WHITE_VALUE
+
+    assert game.search_cell_sandwich_towards(cell_index, direction) is None
 
 
 def test_search_cell_sandwiches(game):
     cell_index = (5, 3)
 
-    assert game.search_cell_sandwiches(cell_index, BLACK_VALUE) is None
+    assert game.search_cell_sandwiches(cell_index) is None
+
+    game.player_value = WHITE_VALUE
+
     assert np.array_equal(
-        game.search_cell_sandwiches(cell_index, WHITE_VALUE),
+        game.search_cell_sandwiches(cell_index),
         np.array([(4, 3)], dtype=(int, 2)),
     )
 
@@ -358,9 +360,14 @@ def test_search_cell_sandwiches(game):
     )
     cell_index = (3, 4)
 
-    assert game.search_cell_sandwiches(cell_index, BLACK_VALUE) is None
+    game.player_value = BLACK_VALUE
+
+    assert game.search_cell_sandwiches(cell_index) is None
+
+    game.player_value = WHITE_VALUE
+
     assert np.array_equal(
-        game.search_cell_sandwiches(cell_index, WHITE_VALUE),
+        game.search_cell_sandwiches(cell_index),
         np.array(
             [
                 (3, 3),
@@ -386,13 +393,13 @@ def test_get_all_non_empty_cells(game):
         np.array([(3, 3), (3, 4), (4, 3), (4, 4)], dtype=(int, 2)),
     )
 
-    game.play_piece((0, 0), BLACK_VALUE)
-    game.play_piece((6, 3), WHITE_VALUE)
+    game.board[4, 5] = BLACK_VALUE
+    game.board[5, 3] = WHITE_VALUE
 
     assert np.array_equal(
         game.get_all_non_empty_cells(),
         np.array(
-            [(0, 0), (3, 3), (3, 4), (4, 3), (4, 4), (6, 3)], dtype=(int, 2)
+            [(3, 3), (3, 4), (3, 5), (4, 3), (4, 4), (5, 4)], dtype=(int, 2)
         ),
     )
 
@@ -486,8 +493,6 @@ def test_get_empty_neighbors(game):
 
 
 def test_update_surrounding_cells(game):
-    game.update_surrounding_cells()
-
     assert np.array_equal(
         game.surrounding_cells,
         np.array(
@@ -509,33 +514,30 @@ def test_update_surrounding_cells(game):
         ),
     )
 
-    game.play_piece((0, 0), BLACK_VALUE)
-    game.play_piece((5, 2), WHITE_VALUE)
+    game.board[4, 5] = BLACK_VALUE
+    game.board[5, 3] = WHITE_VALUE
     game.update_surrounding_cells()
 
     assert np.array_equal(
         game.surrounding_cells,
         np.array(
             [
-                (0, 1),
-                (1, 0),
-                (1, 1),
                 (2, 2),
                 (2, 3),
                 (2, 4),
                 (2, 5),
+                (2, 6),
                 (3, 2),
-                (3, 5),
-                (4, 1),
+                (3, 6),
                 (4, 2),
                 (4, 5),
-                (5, 1),
+                (4, 6),
+                (5, 2),
                 (5, 3),
-                (5, 4),
                 (5, 5),
-                (6, 1),
-                (6, 2),
                 (6, 3),
+                (6, 4),
+                (6, 5),
             ],
             dtype=(int, 2),
         ),
@@ -592,8 +594,6 @@ def test_update_surrounding_cells(game):
 
 
 def test_update_sandwiches(game):
-    game.update_sandwiches(BLACK_VALUE)
-
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
             "2,3": np.array([[3, 3]]),
@@ -603,7 +603,8 @@ def test_update_sandwiches(game):
         }
     )
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
@@ -615,12 +616,14 @@ def test_update_sandwiches(game):
     )
 
     game.board.fill(BLACK_VALUE)
+    game.player_value = BLACK_VALUE
     game.update_surrounding_cells()
-    game.update_sandwiches(BLACK_VALUE)
+    game.update_sandwiches()
 
     assert game.sandwiches == {}
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
 
     assert game.sandwiches == {}
 
@@ -637,8 +640,9 @@ def test_update_sandwiches(game):
         ],
         dtype=int,
     )
+    game.player_value = BLACK_VALUE
     game.update_surrounding_cells()
-    game.update_sandwiches(BLACK_VALUE)
+    game.update_sandwiches()
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
@@ -656,7 +660,8 @@ def test_update_sandwiches(game):
         }
     )
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
 
     assert dict_to_str(game.sandwiches) == dict_to_str(
         {
@@ -676,14 +681,13 @@ def test_update_sandwiches(game):
 
 
 def test_update_indicators(game):
-    game.update_indicators()
-
     assert np.array_equal(
         game.indicators,
         np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
     )
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
     game.update_indicators()
 
     assert np.array_equal(
@@ -692,13 +696,15 @@ def test_update_indicators(game):
     )
 
     game.board.fill(BLACK_VALUE)
+    game.player_value = BLACK_VALUE
     game.update_surrounding_cells()
-    game.update_sandwiches(BLACK_VALUE)
+    game.update_sandwiches()
     game.update_indicators()
 
     assert game.indicators == []
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
     game.update_indicators()
 
     assert game.indicators == []
@@ -716,8 +722,9 @@ def test_update_indicators(game):
         ],
         dtype=int,
     )
+    game.player_value = BLACK_VALUE
     game.update_surrounding_cells()
-    game.update_sandwiches(BLACK_VALUE)
+    game.update_sandwiches()
     game.update_indicators()
 
     assert np.array_equal(
@@ -740,7 +747,8 @@ def test_update_indicators(game):
         ),
     )
 
-    game.update_sandwiches(WHITE_VALUE)
+    game.player_value = WHITE_VALUE
+    game.update_sandwiches()
     game.update_indicators()
 
     assert np.array_equal(
@@ -764,9 +772,9 @@ def test_update_indicators(game):
     )
 
 
-def test_flip_sandwiches_from_indicator(game):
+def test_flip_sandwiches(game):
     indicator_index = (4, 5)
-    game.flip_sandwiches_from_indicator(indicator_index)
+    game.flip_sandwiches(indicator_index)
 
     assert np.array_equal(
         game.board,
@@ -798,12 +806,10 @@ def test_flip_sandwiches_from_indicator(game):
         ],
         dtype=int,
     )
-
-    game.update_surrounding_cells()
-    game.update_sandwiches(WHITE_VALUE)
-    game.update_indicators()
+    game.player_value = WHITE_VALUE
+    game.update_ssi()
     indicator_index = (2, 5)
-    game.flip_sandwiches_from_indicator(indicator_index)
+    game.flip_sandwiches(indicator_index)
 
     assert np.array_equal(
         game.board,
@@ -824,12 +830,12 @@ def test_flip_sandwiches_from_indicator(game):
 
 
 def test_is_player_able_to_play(game):
-    assert game.is_player_able_to_play(BLACK_VALUE)
+    assert game.is_player_able_to_play()
 
-    game.update_sandwiches(WHITE_VALUE)
-    game.update_indicators()
+    game.player_value = WHITE_VALUE
+    game.update_ssi()
 
-    assert game.is_player_able_to_play(WHITE_VALUE)
+    assert game.is_player_able_to_play()
 
     game.board = np.array(
         [
@@ -844,16 +850,15 @@ def test_is_player_able_to_play(game):
         ],
         dtype=int,
     )
-    game.update_surrounding_cells()
-    game.update_sandwiches(BLACK_VALUE)
-    game.update_indicators()
+    game.player_value = BLACK_VALUE
+    game.update_ssi()
 
-    assert not game.is_player_able_to_play(BLACK_VALUE)
+    assert not game.is_player_able_to_play()
 
-    game.update_sandwiches(WHITE_VALUE)
-    game.update_indicators()
+    game.player_value = WHITE_VALUE
+    game.update_ssi()
 
-    assert not game.is_player_able_to_play(WHITE_VALUE)
+    assert not game.is_player_able_to_play()
 
 
 def test_get_black_piece_count(game):
@@ -904,9 +909,7 @@ def test_get_white_piece_count(game):
     assert game.get_white_piece_count() == 24
 
 
-def test_get_winner_player_value(game):
-    assert game.get_winner_player_value() is None
-
+def test_get_winner(game):
     game.board = np.array(
         [
             [-1, 0, -1, 0, -1, 0, 1, 0],
@@ -920,11 +923,9 @@ def test_get_winner_player_value(game):
         ],
         dtype=int,
     )
-    game.update_surrounding_cells()
-    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
-    game.update_indicators()
+    game.update_ssi()
 
-    assert game.get_winner_player_value() == 0
+    assert game.get_winner() == 0
 
     game.board = np.array(
         [
@@ -939,12 +940,9 @@ def test_get_winner_player_value(game):
         ],
         dtype=int,
     )
+    game.update_ssi()
 
-    game.update_surrounding_cells()
-    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
-    game.update_indicators()
-
-    assert game.get_winner_player_value() == WHITE_VALUE
+    assert game.get_winner() == WHITE_VALUE
 
     game.board = np.array(
         [
@@ -959,9 +957,35 @@ def test_get_winner_player_value(game):
         ],
         dtype=int,
     )
+    game.update_ssi()
 
-    game.update_surrounding_cells()
-    game.update_sandwiches(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
-    game.update_indicators()
+    assert game.get_winner() == BLACK_VALUE
 
-    assert game.get_winner_player_value() == BLACK_VALUE
+
+def test_next_player_turn(game):
+    game.next_player_turn()
+
+    assert game.player_value == WHITE_VALUE and not game.is_over
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.player_value = WHITE_VALUE
+    game.next_player_turn()
+
+    assert game.player_value == WHITE_VALUE and game.is_over
+
+    game.player_value = BLACK_VALUE
+    game.next_player_turn()
+
+    assert game.player_value == BLACK_VALUE and game.is_over
