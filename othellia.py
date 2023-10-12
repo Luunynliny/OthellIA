@@ -1,11 +1,11 @@
 import pygame
 
-from game import Game
 from settings import cell_values
 from settings.cell_values import BLACK_VALUE, WHITE_VALUE
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
-from sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
+from src.game import Game
+from src.sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
 
 if __name__ == "__main__":
     pygame.init()

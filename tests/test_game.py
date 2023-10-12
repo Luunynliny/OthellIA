@@ -4,8 +4,16 @@ import pytest
 from game import Game
 from settings.board import BOARD_CELL_LENGTH
 from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
-from settings.directions import (DOWN, DOWN_LEFT, DOWN_RIGHT, LEFT, RIGHT, UP,
-                                 UP_LEFT, UP_RIGHT)
+from settings.directions import (
+    DOWN,
+    DOWN_LEFT,
+    DOWN_RIGHT,
+    LEFT,
+    RIGHT,
+    UP,
+    UP_LEFT,
+    UP_RIGHT,
+)
 from settings.graphics import HEIGHT, WIDTH
 from utils.test import dict_to_str
 
