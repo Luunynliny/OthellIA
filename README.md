@@ -55,9 +55,9 @@ Distributed under the Creative Commons Zero v1.0 Universal License. See `LICENSE
 
 <p align="right"><a href="#top"><i>back to top</i></a></p>
 
-<!-- RESSOURCES -->
+<!-- RESOURCES -->
 
-## Ressources
+## Resources
 
 Official Rules for the game othello. World Othello Federation. (n.d.). https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english
 
