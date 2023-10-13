@@ -54,3 +54,11 @@ The [rules](https://www.worldothello.org/about/about-othello/othello-rules/offic
 Distributed under the Creative Commons Zero v1.0 Universal License. See `LICENSE`for more information.
 
 <p align="right"><a href="#top"><i>back to top</i></a></p>
+
+<!-- RESSOURCES -->
+
+## Ressources
+
+Official Rules for the game othello. World Othello Federation. (n.d.). https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english
+
+<p align="right"><a href="#top"><i>back to top</i></a></p>
