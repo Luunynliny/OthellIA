@@ -34,3 +34,23 @@ Due to previous limitations, I chose to recreate my program using Python while i
 The [rules](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english) of Othello (also called Reversi) are simple to understand, and if you have never tried it, you really should give it a go. However, it has this reputation of being *"easy to learn, hard to master"*, which seemed like a good idea to create an AI to play against.
 
 <p align="right"><a href="#top"><i>back to top</i></a></p>
+
+<!-- ROADMAP -->
+
+## Roadmap
+
+- [x] Game mechanisms
+- [x] Game graphics
+- [] Minimax algorithm
+  - [] Classic
+  - [] αβ-pruning
+- [] Convolutional Neural Network
+- [] Reinforcement Learning
+
+<p align="right"><a href="#top"><i>back to top</i></a></p>
+
+## License
+
+Distributed under the Creative Commons Zero v1.0 Universal License. See `LICENSE`for more information.
+
+<p align="right"><a href="#top"><i>back to top</i></a></p>
