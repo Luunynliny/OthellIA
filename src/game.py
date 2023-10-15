@@ -389,3 +389,16 @@ class Game:
         """
         for move in wrap(transcript, 2):
             self.play_piece(notation_to_cell_index(move))
+
+    def set_position(self, board: np.ndarray, to_play: int):
+        """Set a board position and update surrounding cells, sandwiches and indicators
+        for a player to play.
+
+        Args:
+            board (np.ndarray): a board position.
+            to_play (int): value of the player to play.
+        """
+        self.board = board
+        self.player_value = to_play
+
+        self.update_ssi()
