@@ -254,6 +254,44 @@ class Game:
 
         return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
 
+    def get_all_black_cells(self) -> np.ndarray | None:
+        """Return all blck cells on the board.
+
+        Returns:
+            np.ndarray | None: cells column and row, None if no black cells.
+        """
+        cells = []
+
+        for col in range(BOARD_CELL_LENGTH):
+            for row in range(BOARD_CELL_LENGTH):
+                value = self.board[row, col]
+
+                if value != BLACK_VALUE:
+                    continue
+
+                cells.append((col, row))
+
+        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+
+    def get_all_white_cells(self) -> np.ndarray | None:
+        """Return all white cells on the board.
+
+        Returns:
+            np.ndarray | None: cells column and row, None if no white cells.
+        """
+        cells = []
+
+        for col in range(BOARD_CELL_LENGTH):
+            for row in range(BOARD_CELL_LENGTH):
+                value = self.board[row, col]
+
+                if value != WHITE_VALUE:
+                    continue
+
+                cells.append((col, row))
+
+        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+
     def get_empty_neighbors(
         self, cell_index: tuple[int, int]
     ) -> np.ndarray | None:
@@ -429,3 +467,47 @@ class Game:
         game_copy.update_ssi()
 
         return len(game_copy.indicators)
+
+    def get_black_empty_neighbors_count(self) -> int:
+        """Returns the number of empty cells next to black's pieces.
+
+        Returns:
+            int: number of empty cells.
+        """
+        black_cells = self.get_all_black_cells()
+
+        if black_cells is None:
+            return 0
+
+        empty_cells = []
+        for cell_index in black_cells:
+            empty_neighbors = self.get_empty_neighbors(cell_index)
+
+            if empty_neighbors is None:
+                continue
+
+            empty_cells.extend(empty_neighbors)
+
+        return len(np.unique(empty_cells, axis=0))
+
+    def get_white_empty_neighbors_count(self) -> int:
+        """Returns the number of empty cells next to white's pieces.
+
+        Returns:
+            int: number of empty cells.
+        """
+        white_cells = self.get_all_white_cells()
+
+        if white_cells is None:
+            return 0
+
+        empty_cells = []
+        for cell_index in white_cells:
+            empty_neighbors = self.get_empty_neighbors(cell_index)
+
+            if empty_neighbors is None:
+                continue
+
+            empty_cells.extend(empty_neighbors)
+
+        return len(np.unique(empty_cells, axis=0))
