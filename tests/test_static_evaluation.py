@@ -17,8 +17,24 @@ def static_evaluation():
 
 
 def test_coin_parity(game, static_evaluation):
-    assert static_evaluation.coin_parity(game, BLACK_VALUE) == 0
-    assert static_evaluation.coin_parity(game, WHITE_VALUE) == 0
+    assert static_evaluation.coin_parity(game) == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert static_evaluation.coin_parity(game) == 60
 
     board = np.array(
         [
@@ -35,8 +51,7 @@ def test_coin_parity(game, static_evaluation):
     )
     game.set_position(board, np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert static_evaluation.coin_parity(game, BLACK_VALUE) == -5
-    assert static_evaluation.coin_parity(game, WHITE_VALUE) == 5
+    assert static_evaluation.coin_parity(game) == -5
 
     board = np.array(
         [
@@ -53,5 +68,4 @@ def test_coin_parity(game, static_evaluation):
     )
     game.set_position(board, np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert static_evaluation.coin_parity(game, BLACK_VALUE) == 100
-    assert static_evaluation.coin_parity(game, WHITE_VALUE) == -100
+    assert static_evaluation.coin_parity(game) == 100
