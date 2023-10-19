@@ -1,3 +1,4 @@
+from copy import deepcopy
 from textwrap import wrap
 
 import numpy as np
@@ -402,3 +403,29 @@ class Game:
         self.player_value = to_play
 
         self.update_ssi()
+
+    def get_black_legal_moves_count(self) -> int:
+        """Returns the number of black's legal moves.
+
+        Returns:
+            int: number of legal moves.
+        """
+        game_copy = deepcopy(self)  # Copy the game without reference
+
+        game_copy.player_value = BLACK_VALUE
+        game_copy.update_ssi()
+
+        return len(game_copy.indicators)
+
+    def get_white_legal_moves_count(self) -> int:
+        """Returns the number of white's legal moves.
+
+        Returns:
+            int: number of legal moves.
+        """
+        game_copy = deepcopy(self)  # Copy the game without reference
+
+        game_copy.player_value = WHITE_VALUE
+        game_copy.update_ssi()
+
+        return len(game_copy.indicators)

@@ -1157,3 +1157,79 @@ def test_set_position(game):
             dtype=(int, 2),
         ),
     )
+
+
+def test_get_black_legal_moves_count(game):
+    assert game.get_black_legal_moves_count() == 4
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert game.get_black_legal_moves_count() == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert game.get_black_legal_moves_count() == 6
+
+
+def test_get_white_legal_moves_count(game):
+    assert game.get_white_legal_moves_count() == 4
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert game.get_white_legal_moves_count() == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert game.get_white_legal_moves_count() == 7
