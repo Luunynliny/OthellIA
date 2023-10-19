@@ -103,3 +103,30 @@ class StaticEvaluation:
             * (black_corner_cnt - white_corner_cnt)
             / (black_corner_cnt + white_corner_cnt)
         )
+
+    def future_corners_captured(self, game: Type[Game]) -> float:
+        """Compare the number of possible corners to be captured by black against white.
+
+        Args:
+            game (Game): a game.
+
+        Returns:
+            float: evaluation score.
+        """
+        corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
+
+        black_future_corner_cnt = np.all(
+            np.isin(game.get_black_legal_moves(), corners), axis=1
+        ).sum()
+        white_future_corner_cnt = np.all(
+            np.isin(game.get_white_legal_moves(), corners), axis=1
+        ).sum()
+
+        if black_future_corner_cnt + white_future_corner_cnt == 0:
+            return 0
+
+        return (
+            100
+            * (black_future_corner_cnt - white_future_corner_cnt)
+            / (black_future_corner_cnt + white_future_corner_cnt)
+        )

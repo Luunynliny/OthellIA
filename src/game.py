@@ -442,18 +442,39 @@ class Game:
 
         self.update_ssi()
 
-    def get_black_legal_moves_count(self) -> int:
-        """Returns the number of black's legal moves.
+    def get_black_legal_moves(self) -> np.ndarray:
+        """Return all black possible moves to play.
 
         Returns:
-            int: number of legal moves.
+            np.ndarray: list of cells row and column.
         """
         game_copy = deepcopy(self)  # Copy the game without reference
 
         game_copy.player_value = BLACK_VALUE
         game_copy.update_ssi()
 
-        return len(game_copy.indicators)
+        return game_copy.indicators
+
+    def get_white_legal_moves(self) -> np.ndarray:
+        """Return all white possible moves to play.
+
+        Returns:
+            np.ndarray: list of cells row and column.
+        """
+        game_copy = deepcopy(self)  # Copy the game without reference
+
+        game_copy.player_value = WHITE_VALUE
+        game_copy.update_ssi()
+
+        return game_copy.indicators
+
+    def get_black_legal_moves_count(self) -> int:
+        """Returns the number of black's legal moves.
+
+        Returns:
+            int: number of legal moves.
+        """
+        return len(self.get_black_legal_moves())
 
     def get_white_legal_moves_count(self) -> int:
         """Returns the number of white's legal moves.
@@ -461,12 +482,7 @@ class Game:
         Returns:
             int: number of legal moves.
         """
-        game_copy = deepcopy(self)  # Copy the game without reference
-
-        game_copy.player_value = WHITE_VALUE
-        game_copy.update_ssi()
-
-        return len(game_copy.indicators)
+        return len(self.get_white_legal_moves())
 
     def get_black_empty_neighbors_count(self) -> int:
         """Returns the number of empty cells next to black's pieces.

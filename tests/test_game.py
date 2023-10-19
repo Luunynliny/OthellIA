@@ -1241,6 +1241,96 @@ def test_set_position(game):
     )
 
 
+def test_get_black_legal_moves(game):
+    assert np.array_equal(
+        game.get_black_legal_moves(),
+        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
+    )
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert np.array_equal(game.get_black_legal_moves(), np.array([]))
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert np.array_equal(
+        game.get_black_legal_moves(),
+        np.array([(3, 5), (5, 1), (5, 2), (5, 3), (5, 4), (5, 6)], dtype=int),
+    )
+
+
+def test_get_white_legal_moves(game):
+    assert np.array_equal(
+        game.get_white_legal_moves(),
+        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+    )
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert np.array_equal(game.get_white_legal_moves(), np.array([]))
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert np.array_equal(
+        game.get_white_legal_moves(),
+        np.array(
+            [(1, 2), (1, 3), (2, 2), (2, 4), (2, 5), (6, 5), (6, 6)], dtype=int
+        ),
+    )
+
+
 def test_get_black_legal_moves_count(game):
     assert game.get_black_legal_moves_count() == 4
 
@@ -1320,7 +1410,7 @@ def test_get_white_legal_moves_count(game):
 def test_get_black_empty_neighbors_count(game):
     assert game.get_black_empty_neighbors_count() == 10
 
-    game.board.fill(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.board.fill(*np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert game.get_black_empty_neighbors_count() == 0
 
@@ -1344,7 +1434,7 @@ def test_get_black_empty_neighbors_count(game):
 def test_get_white_empty_neighbors_count(game):
     assert game.get_white_empty_neighbors_count() == 10
 
-    game.board.fill(np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.board.fill(*np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert game.get_white_empty_neighbors_count() == 0
 
