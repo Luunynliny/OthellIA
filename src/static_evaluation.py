@@ -1,6 +1,9 @@
 from typing import Type
 
+import numpy as np
+
 from game import Game
+from settings.cell_values import BLACK_VALUE, WHITE_VALUE
 
 
 class StaticEvaluation:
@@ -69,4 +72,34 @@ class StaticEvaluation:
             100
             * (black_potential_mobility - white_potential_mobility)
             / (black_potential_mobility + white_potential_mobility)
+        )
+
+    def corners_captured(self, game: Type[Game]) -> float:
+        """Compare the number of captured corners of black against white.
+
+        Args:
+            game (Game): a game.
+
+        Returns:
+            float: evaluation score.
+        """
+        corners = np.array(
+            [
+                game.board[0, 0],
+                game.board[7, 0],
+                game.board[0, 7],
+                game.board[7, 7],
+            ]
+        )
+
+        black_corner_cnt = (corners == BLACK_VALUE).sum()
+        white_corner_cnt = (corners == WHITE_VALUE).sum()
+
+        if black_corner_cnt + white_corner_cnt == 0:
+            return 0
+
+        return (
+            100
+            * (black_corner_cnt - white_corner_cnt)
+            / (black_corner_cnt + white_corner_cnt)
         )
