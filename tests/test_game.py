@@ -1430,6 +1430,22 @@ def test_get_black_empty_neighbors_count(game):
 
     assert game.get_black_empty_neighbors_count() == 14
 
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 0, -1, -1, -1, 0, 0],
+            [0, 0, -1, -1, -1, -1, -1, 0],
+            [0, 0, 0, -1, -1, -1, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_black_empty_neighbors_count() == 0
+
 
 def test_get_white_empty_neighbors_count(game):
     assert game.get_white_empty_neighbors_count() == 10
@@ -1453,3 +1469,19 @@ def test_get_white_empty_neighbors_count(game):
     )
 
     assert game.get_white_empty_neighbors_count() == 11
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_white_empty_neighbors_count() == 0

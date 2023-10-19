@@ -148,6 +148,13 @@ def test_potential_mobility(game, static_evaluation):
 
     assert static_evaluation.potential_mobility(game) == -100
 
+    board = np.full(
+        (8, 8), *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1), dtype=int
+    )
+    game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert static_evaluation.potential_mobility(game) == 0
+
 
 def test_corners_captured(game, static_evaluation):
     assert static_evaluation.corners_captured(game) == 0
