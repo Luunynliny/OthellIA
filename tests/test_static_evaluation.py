@@ -230,3 +230,41 @@ def test_future_corners_captured(game, static_evaluation):
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert static_evaluation.future_corners_captured(game) == -100
+
+
+def test_static_weights(game, static_evaluation):
+    assert static_evaluation.static_weights(game) == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, -1, 1, 1, 1, 1, 0],
+            [0, 0, -1, -1, 1, 1, -1, 0],
+            [0, -1, -1, -1, -1, 0, 1, 0],
+            [-1, 0, 0, 0, 0, 0, 0, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert static_evaluation.static_weights(game) == 7
+
+    board = np.array(
+        [
+            [1, 1, 1, 0, 0, 0, 0, 0],
+            [1, 1, 1, -1, 0, 0, 0, 0],
+            [1, 1, 1, -1, -1, 0, 0, 0],
+            [1, -1, 1, -1, -1, -1, 0, 1],
+            [1, 1, -1, -1, -1, -1, -1, -1],
+            [1, -1, 1, 1, 1, 1, 1, 1],
+            [1, 1, -1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert static_evaluation.static_weights(game) == 2

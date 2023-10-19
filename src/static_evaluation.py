@@ -130,3 +130,37 @@ class StaticEvaluation:
             * (black_future_corner_cnt - white_future_corner_cnt)
             / (black_future_corner_cnt + white_future_corner_cnt)
         )
+
+    def static_weights(self, game: Type[Game]) -> float:
+        """Compare black pieces weights sum against white.
+
+        Args:
+            game (Game): a game.
+
+        Returns:
+            float: evaluation score.
+        """
+        weights = np.array(
+            [
+                [4, -3, 2, 2, 2, 2, -3, 4],
+                [-3, -4, -1, -1, -1, -1, -4, -3],
+                [2, -1, 1, 0, 0, 1, -1, 2],
+                [2, -1, 0, 1, 1, 0, -1, 2],
+                [2, -1, 0, 1, 1, 0, -1, 2],
+                [2, -1, 1, 0, 0, 1, -1, 2],
+                [-3, -4, -1, -1, -1, -1, -4, -3],
+                [4, -3, 2, 2, 2, 2, -3, 4],
+            ],
+            dtype=int,
+        )
+
+        black_weights_sum = 0
+        white_weights_sum = 0
+
+        for column, row in game.get_all_black_cells():
+            black_weights_sum += weights[row, column]
+
+        for column, row in game.get_all_white_cells():
+            white_weights_sum += weights[row, column]
+
+        return black_weights_sum - white_weights_sum
