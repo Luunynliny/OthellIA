@@ -268,3 +268,26 @@ def test_static_weights(game, static_evaluation):
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert static_evaluation.static_weights(game) == 2
+
+
+def test_evaluate(game, static_evaluation):
+    weights = [0.3, 0.15, 0.15, 0.1, 0.1, 0.2]
+
+    assert static_evaluation.evaluate(game, weights) == 0
+
+    board = np.array(
+        [
+            [1, 1, 1, 0, 0, 0, 0, 0],
+            [1, 1, 1, -1, 0, 0, 0, 0],
+            [1, 1, 1, -1, -1, 0, 0, 0],
+            [1, -1, 1, -1, -1, -1, 0, 1],
+            [1, 1, -1, -1, -1, -1, -1, -1],
+            [1, -1, 1, 1, 1, 1, 1, 1],
+            [1, 1, -1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert static_evaluation.evaluate(game, weights) == 27.65

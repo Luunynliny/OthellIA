@@ -164,3 +164,31 @@ class StaticEvaluation:
             white_weights_sum += weights[row, column]
 
         return black_weights_sum - white_weights_sum
+
+    def evaluate(
+        self,
+        game: Type[Game],
+        weights: tuple[float, float, float, float, float, float],
+    ) -> float:
+        """Return the weighted evaluation of the respectively coin_parity,
+        actual_mobility, potential_mobility, corners_captured,
+        future_corners_captured and static_weights scores.
+
+        Args:
+            game (Type[Game]): a game.
+            weights (tuple[float, float, float, float, float]): proportion of each
+            score's parts.
+
+        Returns:
+            float: evaluation score.
+        """
+        a, b, c, d, e, f = weights
+
+        return (
+            a * self.coin_parity(game)
+            + b * self.actual_mobility(game)
+            + c * self.potential_mobility(game)
+            + d * self.corners_captured(game)
+            + e * self.future_corners_captured(game)
+            + f * self.static_weights(game)
+        )
