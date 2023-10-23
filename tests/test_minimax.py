@@ -3,7 +3,7 @@ import pytest
 
 from game import Game
 from minimax import minimax
-from settings.cell_values import BLACK_VALUE
+from settings.values import BLACK_VALUE
 from static_evaluation import StaticEvaluation
 
 

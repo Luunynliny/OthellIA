@@ -3,7 +3,7 @@ from typing import Type
 import numpy as np
 
 from game import Game
-from settings.cell_values import BLACK_VALUE, WHITE_VALUE
+from settings.values import BLACK_VALUE, WHITE_VALUE
 
 
 class StaticEvaluation:

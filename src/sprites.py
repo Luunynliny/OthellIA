@@ -1,7 +1,6 @@
 import numpy as np
 import pygame
 
-from settings.cell_values import BLACK_VALUE
 from settings.colors import (
     BLACK_PIECE_COLOR,
     CELL_COLOR,
@@ -20,6 +19,7 @@ from settings.graphics import (
     INDICATOR_SIZE,
     PIECE_SIZE,
 )
+from settings.values import BLACK_VALUE
 
 
 class Cell(pygame.sprite.Sprite):

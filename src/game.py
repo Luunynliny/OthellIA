@@ -4,9 +4,9 @@ from textwrap import wrap
 import numpy as np
 
 from settings.board import BOARD_CELL_LENGTH
-from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from settings.directions import DIRECTIONS
 from settings.graphics import WIDTH
+from settings.values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from utils.game import notation_to_cell_index
 
 

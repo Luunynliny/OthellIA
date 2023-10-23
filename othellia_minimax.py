@@ -1,8 +1,7 @@
 import numpy as np
 import pygame
 
-from settings import cell_values
-from settings.cell_values import BLACK_VALUE, WHITE_VALUE
+from settings import values
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
 from src.game import Game
@@ -17,8 +16,8 @@ if __name__ == "__main__":
     piece_layout = PieceLayout()
     indicator_layout = IndicatorLayout()
 
-    endgame_message_black_won = EndgameMessage(BLACK_VALUE)
-    endgame_message_white_won = EndgameMessage(WHITE_VALUE)
+    endgame_message_black_won = EndgameMessage(values.BLACK_VALUE)
+    endgame_message_white_won = EndgameMessage(values.WHITE_VALUE)
     endgame_message_draw = EndgameMessage(None)
 
     game = Game()
@@ -28,7 +27,7 @@ if __name__ == "__main__":
 
     while running:
         match game.player_value:
-            case cell_values.BLACK_VALUE:
+            case values.BLACK_VALUE:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
@@ -43,7 +42,7 @@ if __name__ == "__main__":
                             # Check if the move is legal
                             if game.is_move_legal(cell_index):
                                 game.play_piece(cell_index)
-            case cell_values.WHITE_VALUE:
+            case values.WHITE_VALUE:
                 # Play a random legal move
                 r_index = np.random.randint(len(game.indicators))
                 game.play_piece(game.indicators[r_index])
@@ -61,9 +60,9 @@ if __name__ == "__main__":
 
         if game.is_over:
             match game.get_winner():
-                case cell_values.BLACK_VALUE:
+                case values.values.BLACK_VALUE:
                     endgame_message_black_won.draw(screen)
-                case cell_values.WHITE_VALUE:
+                case values.WHITE_VALUE:
                     endgame_message_white_won.draw(screen)
                 case _:
                     endgame_message_draw.draw(screen)
