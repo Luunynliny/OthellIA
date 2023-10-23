@@ -2,8 +2,8 @@ from typing import Type
 
 import numpy as np
 
-from game import Game
 from settings.values import BLACK_VALUE, WHITE_VALUE
+from src.game import Game
 
 
 class StaticEvaluation:
@@ -165,11 +165,7 @@ class StaticEvaluation:
 
         return black_weights_sum - white_weights_sum
 
-    def evaluate(
-        self,
-        game: Type[Game],
-        weights: tuple[float, float, float, float, float, float],
-    ) -> float:
+    def evaluate(self, game: Type[Game]) -> float:
         """Return the weighted evaluation of the respectively coin_parity,
         actual_mobility, potential_mobility, corners_captured,
         future_corners_captured and static_weights scores.
@@ -182,7 +178,8 @@ class StaticEvaluation:
         Returns:
             float: evaluation score.
         """
-        a, b, c, d, e, f = weights
+        # For now, the weights of hard set
+        a, b, c, d, e, f = 0.3, 0.15, 0.15, 0.1, 0.1, 0.2
 
         return (
             a * self.coin_parity(game)

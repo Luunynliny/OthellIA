@@ -3,7 +3,8 @@ from typing import Callable, Type
 
 import numpy as np
 
-from game import Game
+from settings.values import BLACK_VALUE
+from src.game import Game
 
 
 def minimax(
@@ -54,3 +55,32 @@ def minimax(
             min_eval = min(min_eval, child_eval)
 
         return min_eval
+
+
+def think(game, depth: int, static_evaluation_func: Callable) -> int:
+    """Return the best move to play according to the game position,
+    the player turn, a searching depth and a static evaluation method.
+
+    Args:
+        game (Type[Game]): a game.
+        depth (int): depth of the search.
+        static_evaluation_func (Callable): position evaluation function.
+
+
+    Returns:
+        int: indicator index of the best move.
+    """
+    maximazing_player = game.player_value == BLACK_VALUE
+    scores = []
+
+    for legal_move in game.indicators:
+        game_copy = deepcopy(game)  # Copy without reference
+        game_copy.play_piece(legal_move)
+
+        scores.append(
+            minimax(
+                game_copy, depth, static_evaluation_func, maximazing_player
+            )
+        )
+
+    return np.array(scores).argmax()

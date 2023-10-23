@@ -1,11 +1,12 @@
-import numpy as np
 import pygame
 
 from settings import values
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
 from src.game import Game
+from src.minimax import think
 from src.sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
+from src.static_evaluation import StaticEvaluation
 
 if __name__ == "__main__":
     pygame.init()
@@ -21,6 +22,7 @@ if __name__ == "__main__":
     endgame_message_draw = EndgameMessage(None)
 
     game = Game()
+    static_evaluation = StaticEvaluation()
 
     running = True
     is_game_over = False
@@ -43,9 +45,13 @@ if __name__ == "__main__":
                             if game.is_move_legal(cell_index):
                                 game.play_piece(cell_index)
             case values.WHITE_VALUE:
-                # Play a random legal move
-                r_index = np.random.randint(len(game.indicators))
-                game.play_piece(game.indicators[r_index])
+                # Find best legal move
+                lm_index = think(
+                    game,
+                    depth=2,
+                    static_evaluation_func=static_evaluation.coin_parity,
+                )
+                game.play_piece(game.indicators[lm_index])
 
         # Update graphics
         piece_layout.update(game.board)
@@ -56,11 +62,14 @@ if __name__ == "__main__":
 
         board.draw(screen)
         piece_layout.draw(screen)
-        indicator_layout.draw(screen)
+
+        # Hide indicators while white is thinking
+        if game.player_value == values.BLACK_VALUE:
+            indicator_layout.draw(screen)
 
         if game.is_over:
             match game.get_winner():
-                case values.values.BLACK_VALUE:
+                case values.BLACK_VALUE:
                     endgame_message_black_won.draw(screen)
                 case values.WHITE_VALUE:
                     endgame_message_white_won.draw(screen)
