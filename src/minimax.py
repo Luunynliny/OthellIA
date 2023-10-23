@@ -10,6 +10,8 @@ from src.game import Game
 def minimax(
     game: Type[Game],
     depth: int,
+    alpha: float,
+    beta: float,
     static_evaluation_func: Callable,
     maximazing_player: bool,
 ) -> float:
@@ -19,6 +21,8 @@ def minimax(
     Args:
         game (Type[Game]): a game.
         depth (int): depth of the search.
+        alpha (float): alpha parameter of pruning.
+        beta (float): beta parameter of pruning.
         static_evaluation_func (Callable): position evaluation function.
         maximazing_player (bool): if we want to maximizing the score of the player.
 
@@ -37,9 +41,18 @@ def minimax(
             game_copy.play_piece(move)
 
             child_eval = minimax(
-                game_copy, depth - 1, static_evaluation_func, False
+                game_copy,
+                depth - 1,
+                alpha,
+                beta,
+                static_evaluation_func,
+                False,
             )
             max_eval = max(max_eval, child_eval)
+
+            alpha = max(alpha, max_eval)
+            if beta <= alpha:
+                break
 
         return max_eval
     else:
@@ -50,9 +63,13 @@ def minimax(
             game_copy.play_piece(move)
 
             child_eval = minimax(
-                game_copy, depth - 1, static_evaluation_func, True
+                game_copy, depth - 1, alpha, beta, static_evaluation_func, True
             )
             min_eval = min(min_eval, child_eval)
+
+            beta = min(beta, min_eval)
+            if beta <= alpha:
+                break
 
         return min_eval
 
@@ -79,7 +96,12 @@ def think(game, depth: int, static_evaluation_func: Callable) -> int:
 
         scores.append(
             minimax(
-                game_copy, depth, static_evaluation_func, maximazing_player
+                game_copy,
+                depth,
+                -np.inf,
+                np.inf,
+                static_evaluation_func,
+                maximazing_player,
             )
         )
 
