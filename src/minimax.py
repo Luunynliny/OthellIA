@@ -11,8 +11,9 @@ def minimax(
     depth: int,
     static_evaluation_func: Callable,
     maximazing_player: bool,
-) -> tuple[int, int]:
-    """_summary_
+) -> float:
+    """Analyse the current board position according to a static evaluation function and
+    a depth.
 
     Args:
         game (Type[Game]): a game.
@@ -21,7 +22,7 @@ def minimax(
         maximazing_player (bool): if we want to maximizing the score of the player.
 
     Returns:
-        tuple[int, int]: row and column of the cell_index to play.
+        float: evaluation score.
     """
     # https://www.youtube.com/watch?v=l-hh51ncgDI
     if depth == 0 or game.is_over:
