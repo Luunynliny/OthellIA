@@ -28,30 +28,31 @@ if __name__ == "__main__":
     is_game_over = False
 
     while running:
-        match game.player_value:
-            case values.BLACK_VALUE:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        running = False
+        if not game.is_over:
+            match game.player_value:
+                case values.BLACK_VALUE:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            running = False
 
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        cell_index = game.mouse_pos_to_cell_index(
-                            pygame.mouse.get_pos()
-                        )
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            cell_index = game.mouse_pos_to_cell_index(
+                                pygame.mouse.get_pos()
+                            )
 
-                        # Check if a piece can be played
-                        if game.is_cell_empty(cell_index):
-                            # Check if the move is legal
-                            if game.is_move_legal(cell_index):
-                                game.play_piece(cell_index)
-            case values.WHITE_VALUE:
-                # Find best legal move
-                lm_index = think(
-                    game,
-                    depth=2,
-                    static_evaluation_func=static_evaluation.coin_parity,
-                )
-                game.play_piece(game.indicators[lm_index])
+                            # Check if a piece can be played
+                            if game.is_cell_empty(cell_index):
+                                # Check if the move is legal
+                                if game.is_move_legal(cell_index):
+                                    game.play_piece(cell_index)
+                case values.WHITE_VALUE:
+                    # Find best legal move
+                    lm_index = think(
+                        game,
+                        depth=2,
+                        static_evaluation_func=static_evaluation.coin_parity,
+                    )
+                    game.play_piece(game.indicators[lm_index])
 
         # Update graphics
         piece_layout.update(game.board)
