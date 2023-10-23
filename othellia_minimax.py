@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 
 from settings import cell_values
@@ -26,20 +27,26 @@ if __name__ == "__main__":
     is_game_over = False
 
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+        match game.player_value:
+            case cell_values.BLACK_VALUE:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                cell_index = game.mouse_pos_to_cell_index(
-                    pygame.mouse.get_pos()
-                )
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        cell_index = game.mouse_pos_to_cell_index(
+                            pygame.mouse.get_pos()
+                        )
 
-                # Check if a piece can be played
-                if game.is_cell_empty(cell_index):
-                    # Check if the move is legal
-                    if game.is_move_legal(cell_index):
-                        game.play_piece(cell_index)
+                        # Check if a piece can be played
+                        if game.is_cell_empty(cell_index):
+                            # Check if the move is legal
+                            if game.is_move_legal(cell_index):
+                                game.play_piece(cell_index)
+            case cell_values.WHITE_VALUE:
+                # Play a random legal move
+                r_index = np.random.randint(len(game.indicators))
+                game.play_piece(game.indicators[r_index])
 
         # Update graphics
         piece_layout.update(game.board)
