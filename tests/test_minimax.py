@@ -3,7 +3,7 @@ import pytest
 
 from othellia.game import Game
 from othellia.minimax import minimax, think
-from othellia.static_evaluation import StaticEvaluation
+from othellia.static_evaluation import coin_parity
 from settings.values import BLACK_VALUE
 
 
@@ -12,30 +12,19 @@ def game():
     return Game()
 
 
-@pytest.fixture
-def static_evaluation():
-    return StaticEvaluation()
+def test_minimax_depth_zero(game):
+    assert minimax(game, 0, -np.inf, np.inf, coin_parity, True) == 0
+    assert minimax(game, 0, -np.inf, np.inf, coin_parity, False) == 0
 
 
-def test_minimax_depth_zero(game, static_evaluation):
-    assert (
-        minimax(game, 0, -np.inf, np.inf, static_evaluation.coin_parity, True)
-        == 0
-    )
-    assert (
-        minimax(game, 0, -np.inf, np.inf, static_evaluation.coin_parity, False)
-        == 0
-    )
-
-
-def test_minimax(game, static_evaluation):
+def test_minimax(game):
     depth = 3
 
     assert minimax(
-        game, depth, -np.inf, np.inf, static_evaluation.coin_parity, True
+        game, depth, -np.inf, np.inf, coin_parity, True
     ) == pytest.approx(42.85, rel=1e-3)
     assert minimax(
-        game, depth, -np.inf, np.inf, static_evaluation.coin_parity, False
+        game, depth, -np.inf, np.inf, coin_parity, False
     ) == pytest.approx(42.85, rel=1e-3)
 
     game.set_position(
@@ -56,19 +45,19 @@ def test_minimax(game, static_evaluation):
     )
 
     assert minimax(
-        game, depth, -np.inf, np.inf, static_evaluation.coin_parity, True
+        game, depth, -np.inf, np.inf, coin_parity, True
     ) == pytest.approx(38.46, rel=1e-3)
     assert minimax(
-        game, depth, -np.inf, np.inf, static_evaluation.coin_parity, False
+        game, depth, -np.inf, np.inf, coin_parity, False
     ) == pytest.approx(7.69, rel=1e-3)
 
 
-def test_think(game, static_evaluation):
+def test_think(game):
     depth = 3
 
-    assert think(game, depth, static_evaluation.coin_parity) == 0
+    assert think(game, depth, coin_parity) == 0
     game.next_player_turn()
-    assert think(game, depth, static_evaluation.coin_parity) == 0
+    assert think(game, depth, coin_parity) == 0
 
     game.set_position(
         np.array(
@@ -87,6 +76,6 @@ def test_think(game, static_evaluation):
         BLACK_VALUE,
     )
 
-    assert think(game, depth, static_evaluation.coin_parity) == 5
+    assert think(game, depth, coin_parity) == 5
     game.next_player_turn()
-    assert think(game, depth, static_evaluation.coin_parity) == 1
+    assert think(game, depth, coin_parity) == 1
