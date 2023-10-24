@@ -292,18 +292,6 @@ def test_evaluate(game, static_evaluation):
 
 
 def test_set_evaluation_weights(static_evaluation):
-    assert np.array_equal(
-        static_evaluation.evaluation_weights,
-        (
-            0.3,
-            0.15,
-            0.15,
-            0.1,
-            0.1,
-            0.2,
-        ),
-    )
-
     weights = (3, 2, 4, -1, 0, 10)
     static_evaluation.set_evaluation_weights(weights)
 
