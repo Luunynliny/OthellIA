@@ -136,12 +136,12 @@ class StaticEvaluation:
 
         black_future_corner_cnt = (
             0
-            if black_legal_moves.size == 0
+            if len(black_legal_moves) == 0
             else np.all(np.isin(black_legal_moves, corners), axis=1).sum()
         )
         white_future_corner_cnt = (
             0
-            if white_legal_moves.size == 0
+            if len(white_legal_moves) == 0
             else np.all(
                 np.isin(game.get_white_legal_moves(), corners), axis=1
             ).sum()
