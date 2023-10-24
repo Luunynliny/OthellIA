@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
 
-from game import Game
-from minimax import minimax, think
+from othellia.game import Game
+from othellia.minimax import minimax, think
+from othellia.static_evaluation import StaticEvaluation
 from settings.values import BLACK_VALUE
-from static_evaluation import StaticEvaluation
 
 
 @pytest.fixture

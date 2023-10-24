@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from game import Game
+from othellia.game import Game
+from othellia.static_evaluation import StaticEvaluation
 from settings.values import BLACK_VALUE, WHITE_VALUE
-from static_evaluation import StaticEvaluation
 
 
 @pytest.fixture

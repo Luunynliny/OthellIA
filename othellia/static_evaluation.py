@@ -2,8 +2,8 @@ from typing import Type
 
 import numpy as np
 
+from othellia.game import Game
 from settings.values import BLACK_VALUE, WHITE_VALUE
-from src.game import Game
 
 
 class StaticEvaluation:

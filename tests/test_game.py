@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from game import Game
+from othellia.game import Game
 from settings.board import BOARD_CELL_LENGTH
 from settings.directions import (
     DOWN,

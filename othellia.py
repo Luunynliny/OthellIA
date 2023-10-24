@@ -1,10 +1,15 @@
 import pygame
 
+from othellia.game import Game
+from othellia.sprites import (
+    Board,
+    EndgameMessage,
+    IndicatorLayout,
+    PieceLayout,
+)
 from settings import values
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
-from src.game import Game
-from src.sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
 
 if __name__ == "__main__":
     pygame.init()

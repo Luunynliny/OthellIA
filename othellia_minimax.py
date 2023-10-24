@@ -1,12 +1,17 @@
 import pygame
 
+from othellia.game import Game
+from othellia.minimax import think
+from othellia.sprites import (
+    Board,
+    EndgameMessage,
+    IndicatorLayout,
+    PieceLayout,
+)
+from othellia.static_evaluation import StaticEvaluation
 from settings import values
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
-from src.game import Game
-from src.minimax import think
-from src.sprites import Board, EndgameMessage, IndicatorLayout, PieceLayout
-from src.static_evaluation import StaticEvaluation
 
 if __name__ == "__main__":
     pygame.init()
