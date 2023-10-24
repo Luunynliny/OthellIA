@@ -106,9 +106,6 @@ def think(game, depth: int, static_evaluation_func: Callable) -> int:
             )
         )
 
-    print(list(zip(game.indicators, scores)))
-    print()
-
     return (
         np.array(scores).argmax()
         if maximazing_player
