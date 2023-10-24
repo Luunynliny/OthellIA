@@ -33,14 +33,8 @@ def play_match(
             case values.WHITE_VALUE:
                 static_evaluation.set_evaluation_weights(chromosome_black)
 
-        # Find best legal move
-        move_index = think(
-            game,
-            depth,
-            static_evaluation.evaluate,
-        )
-        move = game.indicators[move_index]
-
+        # Play best legal move
+        move = think(game, depth, static_evaluation.evaluate)
         game.play_piece(move)
 
         # Keep record of the move

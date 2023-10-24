@@ -66,9 +66,13 @@ def test_minimax(game, static_evaluation):
 def test_think(game, static_evaluation):
     depth = 3
 
-    assert think(game, depth, static_evaluation.coin_parity) == 0
+    assert np.array_equal(
+        think(game, depth, static_evaluation.coin_parity), (2, 3)
+    )
     game.next_player_turn()
-    assert think(game, depth, static_evaluation.coin_parity) == 0
+    assert np.array_equal(
+        think(game, depth, static_evaluation.coin_parity), (2, 4)
+    )
 
     game.set_position(
         np.array(
@@ -87,6 +91,10 @@ def test_think(game, static_evaluation):
         BLACK_VALUE,
     )
 
-    assert think(game, depth, static_evaluation.coin_parity) == 5
+    assert np.array_equal(
+        think(game, depth, static_evaluation.coin_parity), (6, 4)
+    )
     game.next_player_turn()
-    assert think(game, depth, static_evaluation.coin_parity) == 1
+    assert np.array_equal(
+        think(game, depth, static_evaluation.coin_parity), (1, 4)
+    )

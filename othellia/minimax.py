@@ -75,7 +75,9 @@ def minimax(
         return min_eval
 
 
-def think(game, depth: int, static_evaluation_func: Callable) -> int:
+def think(
+    game, depth: int, static_evaluation_func: Callable
+) -> tuple[int, int]:
     """Return the best move to play according to the game position,
     the player turn, a searching depth and a static evaluation method.
 
@@ -86,7 +88,7 @@ def think(game, depth: int, static_evaluation_func: Callable) -> int:
 
 
     Returns:
-        int: indicator index of the best move.
+        int: row and column of the best move.
     """
     maximazing_player = game.player_value == BLACK_VALUE
     scores = []
@@ -106,8 +108,11 @@ def think(game, depth: int, static_evaluation_func: Callable) -> int:
             )
         )
 
+    min_index = np.array(scores).argmin()
+    max_index = np.array(scores).argmax()
+
     return (
-        np.array(scores).argmax()
+        game.indicators[max_index]
         if maximazing_player
-        else np.array([scores]).argmin()
+        else game.indicators[min_index]
     )
