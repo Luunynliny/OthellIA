@@ -54,7 +54,7 @@ if __name__ == "__main__":
                     # Find best legal move
                     lm_index = think(
                         game,
-                        depth=2,
+                        depth=1,
                         static_evaluation_func=static_evaluation.coin_parity,
                     )
                     game.play_piece(game.indicators[lm_index])

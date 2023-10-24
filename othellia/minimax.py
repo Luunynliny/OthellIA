@@ -24,7 +24,8 @@ def minimax(
         alpha (float): alpha parameter of pruning.
         beta (float): beta parameter of pruning.
         static_evaluation_func (Callable): position evaluation function.
-        maximazing_player (bool): if we want to maximizing the score of the player.
+        maximazing_player (bool): if we want to maximizing (for black)
+        or minimize (for white)the score of the player.
 
     Returns:
         float: evaluation score.
@@ -50,7 +51,7 @@ def minimax(
             )
             max_eval = max(max_eval, child_eval)
 
-            alpha = max(alpha, max_eval)
+            alpha = max(alpha, child_eval)
             if beta <= alpha:
                 break
 
@@ -67,7 +68,7 @@ def minimax(
             )
             min_eval = min(min_eval, child_eval)
 
-            beta = min(beta, min_eval)
+            beta = min(beta, child_eval)
             if beta <= alpha:
                 break
 
@@ -105,4 +106,11 @@ def think(game, depth: int, static_evaluation_func: Callable) -> int:
             )
         )
 
-    return np.array(scores).argmax()
+    print(list(zip(game.indicators, scores)))
+    print()
+
+    return (
+        np.array(scores).argmax()
+        if maximazing_player
+        else np.array([scores]).argmin()
+    )

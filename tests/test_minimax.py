@@ -89,4 +89,4 @@ def test_think(game, static_evaluation):
 
     assert think(game, depth, static_evaluation.coin_parity) == 5
     game.next_player_turn()
-    assert think(game, depth, static_evaluation.coin_parity) == 0
+    assert think(game, depth, static_evaluation.coin_parity) == 1
