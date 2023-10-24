@@ -2,15 +2,7 @@ import numpy as np
 import pytest
 
 from othellia.game import Game
-from othellia.static_evaluation import (
-    actual_mobility,
-    coin_parity,
-    corners_captured,
-    evaluate,
-    future_corners_captured,
-    potential_mobility,
-    static_weights,
-)
+from othellia.static_evaluation import StaticEvaluation
 from settings.values import BLACK_VALUE, WHITE_VALUE
 
 
@@ -19,8 +11,13 @@ def game():
     return Game()
 
 
-def test_coin_parity(game):
-    assert coin_parity(game) == 0
+@pytest.fixture
+def static_evaluation():
+    return StaticEvaluation()
+
+
+def test_coin_parity(game, static_evaluation):
+    assert static_evaluation.coin_parity(game) == 0
 
     board = np.array(
         [
@@ -37,7 +34,7 @@ def test_coin_parity(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert coin_parity(game) == 60
+    assert static_evaluation.coin_parity(game) == 60
 
     board = np.array(
         [
@@ -54,7 +51,7 @@ def test_coin_parity(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert coin_parity(game) == -5
+    assert static_evaluation.coin_parity(game) == -5
 
     board = np.array(
         [
@@ -71,11 +68,11 @@ def test_coin_parity(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert coin_parity(game) == 100
+    assert static_evaluation.coin_parity(game) == 100
 
 
-def test_actual_mobility(game):
-    assert actual_mobility(game) == 0
+def test_actual_mobility(game, static_evaluation):
+    assert static_evaluation.actual_mobility(game) == 0
 
     board = np.array(
         [
@@ -92,7 +89,7 @@ def test_actual_mobility(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert actual_mobility(game) == 40
+    assert static_evaluation.actual_mobility(game) == 40
 
     board = np.array(
         [
@@ -109,11 +106,11 @@ def test_actual_mobility(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert actual_mobility(game) == 0
+    assert static_evaluation.actual_mobility(game) == 0
 
 
-def test_potential_mobility(game):
-    assert potential_mobility(game) == 0
+def test_potential_mobility(game, static_evaluation):
+    assert static_evaluation.potential_mobility(game) == 0
 
     board = np.array(
         [
@@ -130,7 +127,9 @@ def test_potential_mobility(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert potential_mobility(game) == pytest.approx(5.26, rel=1e-3)
+    assert static_evaluation.potential_mobility(game) == pytest.approx(
+        5.26, rel=1e-3
+    )
 
     board = np.array(
         [
@@ -147,18 +146,18 @@ def test_potential_mobility(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert potential_mobility(game) == -100
+    assert static_evaluation.potential_mobility(game) == -100
 
     board = np.full(
         (8, 8), *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1), dtype=int
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert potential_mobility(game) == 0
+    assert static_evaluation.potential_mobility(game) == 0
 
 
-def test_corners_captured(game):
-    assert corners_captured(game) == 0
+def test_corners_captured(game, static_evaluation):
+    assert static_evaluation.corners_captured(game) == 0
 
     board = np.array(
         [
@@ -175,7 +174,7 @@ def test_corners_captured(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert corners_captured(game) == 100
+    assert static_evaluation.corners_captured(game) == 100
 
     board = np.array(
         [
@@ -192,11 +191,11 @@ def test_corners_captured(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert corners_captured(game) == 50
+    assert static_evaluation.corners_captured(game) == 50
 
 
-def test_future_corners_captured(game):
-    assert corners_captured(game) == 0
+def test_future_corners_captured(game, static_evaluation):
+    assert static_evaluation.future_corners_captured(game) == 0
 
     board = np.array(
         [
@@ -213,7 +212,7 @@ def test_future_corners_captured(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert future_corners_captured(game) == 0
+    assert static_evaluation.future_corners_captured(game) == 0
 
     board = np.array(
         [
@@ -230,11 +229,11 @@ def test_future_corners_captured(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert future_corners_captured(game) == -100
+    assert static_evaluation.future_corners_captured(game) == -100
 
 
-def test_static_weights(game):
-    assert static_weights(game) == 0
+def test_static_weights(game, static_evaluation):
+    assert static_evaluation.static_weights(game) == 0
 
     board = np.array(
         [
@@ -251,7 +250,7 @@ def test_static_weights(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert static_weights(game) == 7
+    assert static_evaluation.static_weights(game) == 7
 
     board = np.array(
         [
@@ -268,11 +267,11 @@ def test_static_weights(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert static_weights(game) == 2
+    assert static_evaluation.static_weights(game) == 2
 
 
-def test_evaluate(game):
-    assert evaluate(game) == 0
+def test_evaluate(game, static_evaluation):
+    assert static_evaluation.evaluate(game) == 0
 
     board = np.array(
         [
@@ -289,4 +288,20 @@ def test_evaluate(game):
     )
     game.set_position(board, *np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
-    assert evaluate(game) == 27.65
+    assert static_evaluation.evaluate(game) == 27.65
+
+
+def test_set_evaluation_weights(static_evaluation):
+    assert static_evaluation.evaluation_weights == (
+        0.3,
+        0.15,
+        0.15,
+        0.1,
+        0.1,
+        0.2,
+    )
+
+    weights = (3, 2, 4, -1, 0, 10)
+    static_evaluation.set_evaluation_weights(weights)
+
+    assert static_evaluation.evaluation_weights == (3, 2, 4, -1, 0, 10)
