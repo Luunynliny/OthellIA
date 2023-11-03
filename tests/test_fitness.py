@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from genetic.fitness import play_match
+from genetic.fitness import play_match, play_tournament
 from othellia.static_evaluation import StaticEvaluation
 from settings.values import WHITE_VALUE
 
@@ -23,4 +23,21 @@ def test_play_match(static_evaluation):
         transcript
         == "c4e3f4c5e6f5d6f6d3c3g4g6h6g7g5h5f8g3h4h8h3h7f7g8e8d8d7h2d2c8f2f3g2c6e7h1e2g"
         + "1c2f1b6b5c7a6a5c1b2b3a7a4a3b4b7a2a1a8d1b1e1b8"
+    )
+
+
+def test_play_tournament(static_evaluation):
+    chromosomes = np.array(
+        [
+            [1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+        ]
+    )
+    depth = 1
+
+    assert np.array_equal(
+        play_tournament(chromosomes, depth),
+        np.array([6, -2, -2, -2]),
     )

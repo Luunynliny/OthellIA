@@ -1,3 +1,5 @@
+from itertools import permutations
+
 import numpy as np
 
 from othellia.game import Game
@@ -41,3 +43,40 @@ def play_match(
         transcript += cell_index_to_notation(move)
 
     return game.get_winner(), transcript
+
+
+def play_tournament(chromosomes: np.ndarray, depth: int) -> np.ndarray:
+    """Runs a tournament by making each chromosomes play against each other as black
+    and white, and returns each chromosomes score.
+
+    A victory is represented by 1 points, a draw by 0 and a loss by -1.
+
+    Args:
+        chromosomes (np.ndarray): population of chromosome.
+        depth (int): depth of the minimax search.
+
+    Returns:
+        np.ndarray: list of chromosomes score.
+    """
+    scores = np.zeros(len(chromosomes))
+
+    # Iterate over each possible chromosome index pairs
+    for b_index, w_index in permutations(range(len(chromosomes)), 2):
+        print(b_index, w_index)
+        winner, _ = play_match(
+            chromosomes[b_index], chromosomes[w_index], depth
+        )
+
+        match winner:
+            case values.BLACK_VALUE:
+                print("black won")
+                scores[b_index] += 1
+                scores[w_index] += -1
+            case values.WHITE_VALUE:
+                print("white won")
+                scores[b_index] += -1
+                scores[w_index] += 1
+
+        print(scores)
+
+    return np.array(scores, dtype=int)

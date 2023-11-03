@@ -8,7 +8,7 @@ from othellia.sprites import (
     IndicatorLayout,
     PieceLayout,
 )
-from othellia.static_evaluation import coin_parity
+from othellia.static_evaluation import StaticEvaluation
 from settings import values
 from settings.colors import BOARD_COLOR
 from settings.graphics import HEIGHT, WIDTH
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     endgame_message_draw = EndgameMessage(None)
 
     game = Game()
+    static_evaluation = StaticEvaluation()
 
     running = True
     is_game_over = False
@@ -51,12 +52,12 @@ if __name__ == "__main__":
                                     game.play_piece(cell_index)
                 case values.WHITE_VALUE:
                     # Find best legal move
-                    lm_index = think(
+                    best_move = think(
                         game,
                         depth=2,
-                        static_evaluation_func=coin_parity,
+                        static_evaluation_func=static_evaluation.coin_parity,
                     )
-                    game.play_piece(game.indicators[lm_index])
+                    game.play_piece(best_move)
 
         # Update graphics
         piece_layout.update(game.board)
