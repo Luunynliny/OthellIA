@@ -23,7 +23,4 @@ def one_point_crossover(
     c1 = np.append(p2[:point_index], p1[point_index:])
     c2 = np.append(p1[:point_index], p2[point_index:])
 
-    print(c1 / sum(c1))
-    print(c2 / sum(c2))
-
     return c1 / sum(c1), c2 / sum(c2)
