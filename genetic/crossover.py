@@ -7,6 +7,8 @@ def one_point_crossover(
     """Performs one-point crossover on two parent chromosomes and retuns two new child
     chromosomes.
 
+    New chromosomes are normalized to fit requirements.
+
     Args:
         p1 (np.ndarray): first parent chromosome.
         p2 (np.ndarray): second parent chromosome.
@@ -18,7 +20,10 @@ def one_point_crossover(
 
     point_index = rng.integers(1, len(p1))
 
-    c1 = p2[:point_index] + p1[point_index:]
-    c2 = p1[:point_index] + p2[point_index:]
+    c1 = np.append(p2[:point_index], p1[point_index:])
+    c2 = np.append(p1[:point_index], p2[point_index:])
 
-    return c1, c2
+    print(c1 / sum(c1))
+    print(c2 / sum(c2))
+
+    return c1 / sum(c1), c2 / sum(c2)
