@@ -23,6 +23,11 @@ def game():
     return Game()
 
 
+@pytest.fixture
+def rng():
+    return np.random.default_rng()
+
+
 def test_piece_values():
     assert EMPTY_VALUE == 0
     assert BLACK_VALUE == 1
@@ -203,7 +208,7 @@ def test_play_piece(game):
     )
 
 
-def test_is_move_legal(game):
+def test_is_move_legal(game, rng):
     legal_move = (3, 2)
     illegal_move = (0, 0)
 
@@ -212,7 +217,7 @@ def test_is_move_legal(game):
 
     game.board.fill(BLACK_VALUE)
     game.update_ssi()
-    move = np.random.randint(BOARD_CELL_LENGTH, size=2)
+    move = rng.integers(BOARD_CELL_LENGTH, size=2)
 
     assert not game.is_move_legal(move)
 
@@ -524,7 +529,7 @@ def test_get_all_black_cells(game):
     )
 
 
-def test_get_empty_neighbors(game):
+def test_get_empty_neighbors(game, rng):
     cell_index = (0, 0)
 
     assert np.array_equal(
@@ -540,7 +545,7 @@ def test_get_empty_neighbors(game):
     )
 
     game.board.fill(BLACK_VALUE)
-    cell_index = np.random.randint(BOARD_CELL_LENGTH, size=2)
+    cell_index = rng.integers(BOARD_CELL_LENGTH, size=2)
 
     assert game.get_empty_neighbors(cell_index) is None
 
@@ -1407,10 +1412,10 @@ def test_get_white_legal_moves_count(game):
     assert game.get_white_legal_moves_count() == 7
 
 
-def test_get_black_empty_neighbors_count(game):
+def test_get_black_empty_neighbors_count(game, rng):
     assert game.get_black_empty_neighbors_count() == 10
 
-    game.board.fill(*np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.board.fill(*rng.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert game.get_black_empty_neighbors_count() == 0
 
@@ -1447,10 +1452,10 @@ def test_get_black_empty_neighbors_count(game):
     assert game.get_black_empty_neighbors_count() == 0
 
 
-def test_get_white_empty_neighbors_count(game):
+def test_get_white_empty_neighbors_count(game, rng):
     assert game.get_white_empty_neighbors_count() == 10
 
-    game.board.fill(*np.random.choice([BLACK_VALUE, WHITE_VALUE], 1))
+    game.board.fill(*rng.choice([BLACK_VALUE, WHITE_VALUE], 1))
 
     assert game.get_white_empty_neighbors_count() == 0
 
