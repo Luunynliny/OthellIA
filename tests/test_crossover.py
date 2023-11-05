@@ -55,7 +55,7 @@ def test_two_point_crossover(monkeypatch):
     i = 0
 
     class Mock_default_rng:
-        def choice(self, a, b, replace):
+        def choice(self, a, size, replace):
             nonlocal i
             i += 1
             return values[i - 1]
