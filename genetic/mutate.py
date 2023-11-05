@@ -47,3 +47,30 @@ def scramble(chromosome: np.ndarray) -> np.ndarray:
             chromosome[i2 + 1 :],
         ]
     )
+
+
+def inversion(chromosome: np.ndarray) -> np.ndarray:
+    """Performs inversion mutation and returns the new chromosome state.
+
+    Args:
+        chromosome (np.ndarray): a chromosome.
+
+    Returns:
+        np.ndarray: mutated chromosome.
+    """
+    rng = np.random.default_rng()
+
+    to_inverse_indices = rng.choice(
+        range(len(chromosome)), size=2, replace=False
+    )
+    to_inverse_indices.sort()
+
+    i1, i2 = to_inverse_indices
+
+    return np.concatenate(
+        [
+            chromosome[:i1],
+            chromosome[i1 : i2 + 1][::-1],
+            chromosome[i2 + 1 :],
+        ]
+    )
