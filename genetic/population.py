@@ -7,7 +7,9 @@ def generate_random_chromosome() -> np.ndarray:
     Returns:
         np.ndarray: a chromosome.
     """
-    weights = np.random.rand(6)
+    rng = np.random.default_rng()
+
+    weights = rng.random(6)
     return weights / sum(weights)
 
 

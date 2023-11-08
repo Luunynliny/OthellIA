@@ -183,11 +183,16 @@ class StaticEvaluation:
         black_weights_sum = 0
         white_weights_sum = 0
 
-        for column, row in game.get_all_black_cells():
-            black_weights_sum += weights[row, column]
+        black_cells = game.get_all_black_cells()
+        white_cells = game.get_all_white_cells()
 
-        for column, row in game.get_all_white_cells():
-            white_weights_sum += weights[row, column]
+        if black_cells is not None:
+            for column, row in black_cells:
+                black_weights_sum += weights[row, column]
+
+        if white_cells is not None:
+            for column, row in white_cells:
+                white_weights_sum += weights[row, column]
 
         return black_weights_sum - white_weights_sum
 

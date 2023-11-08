@@ -62,21 +62,16 @@ def play_tournament(chromosomes: np.ndarray, depth: int) -> np.ndarray:
 
     # Iterate over each possible chromosome index pairs
     for b_index, w_index in permutations(range(len(chromosomes)), 2):
-        print(b_index, w_index)
         winner, _ = play_match(
             chromosomes[b_index], chromosomes[w_index], depth
         )
 
         match winner:
             case values.BLACK_VALUE:
-                print("black won")
                 scores[b_index] += 1
                 scores[w_index] += -1
             case values.WHITE_VALUE:
-                print("white won")
                 scores[b_index] += -1
                 scores[w_index] += 1
-
-        print(scores)
 
     return np.array(scores, dtype=int)
