@@ -1,6 +1,4 @@
-,score,score
-,chromosome_0,chromosome_1
-generation,,
+generation,chromosome_0,chromosome_1
 0,-2,2
 1,0,0
 2,0,0
