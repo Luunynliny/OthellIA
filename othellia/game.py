@@ -86,7 +86,7 @@ class Game:
         if np.array_equal(self.indicators, np.array([])):
             return False
 
-        return np.any(np.all(self.indicators == cell_index, axis=1))
+        return bool(np.any(np.all(self.indicators == cell_index, axis=1)))
 
     def update_sandwiches(self):
         """Find all the sandwiches from available legal moves.
@@ -118,7 +118,7 @@ class Game:
             np.ndarray | None: cell indices within the sandwiches,
             None if no sandwiches.
         """
-        sandwiches = []
+        sandwiches: list[np.ndarray] = []
 
         # Loop for sandwiches in all directions
         for direction in DIRECTIONS:
@@ -195,7 +195,6 @@ class Game:
             np.ndarray | None: cells value in the given direction.
         """
         x, y = cell_index
-        values = None
 
         match direction:
             case (0, 1):
@@ -495,7 +494,7 @@ class Game:
         if black_cells is None:
             return 0
 
-        empty_cells = []
+        empty_cells: list[np.ndarray] = []
         for cell_index in black_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
@@ -517,7 +516,7 @@ class Game:
         if white_cells is None:
             return 0
 
-        empty_cells = []
+        empty_cells: list[np.ndarray] = []
         for cell_index in white_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
