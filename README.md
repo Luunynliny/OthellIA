@@ -7,6 +7,7 @@
 ![pytest](https://github.com/Luunynliny/othellia/actions/workflows/python-pytest.yaml/badge.svg)
 [![codecov](https://codecov.io/gh/Luunynliny/othellia/graph/badge.svg?token=U249MOBZOM)](https://codecov.io/gh/Luunynliny/othellia)
 [![CodeQL](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql)
+[![Mypy](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml)
 
 <!-- PROJECT LOGO -->
 
