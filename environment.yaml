@@ -6,6 +6,7 @@ dependencies:
   - jupyter
   - libstdcxx-ng
   - matplotlib
+  - mypy
   - numpy
   - pandas
   - pygame
