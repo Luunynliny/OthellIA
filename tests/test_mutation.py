@@ -1,6 +1,6 @@
 import numpy as np
 
-from genetic.mutate import inversion, scramble, swap
+from genetic.mutation import inversion, scramble, swap
 
 
 def test_swap(monkeypatch):
