@@ -1,14 +1,16 @@
 import numpy as np
 
 
-def swap(chromosome: np.ndarray) -> np.ndarray:
+def swap(
+    chromosome: np.ndarray[np.float64, np.dtype[np.float64]]
+) -> np.ndarray[np.float64, np.dtype[np.float64]]:
     """Performs swap mutation and returns the new chromosome state.
 
     Args:
-        chromosome (np.ndarray): a chromosome.
+        chromosome (np.ndarray[np.float64, np.dtype[np.float64]]): a chromosome.
 
     Returns:
-        np.ndarray: mutated chromosome.
+        np.ndarray[np.float64, np.dtype[np.float64]]: mutated chromosome.
     """
     rng = np.random.default_rng()
 
@@ -22,14 +24,16 @@ def swap(chromosome: np.ndarray) -> np.ndarray:
     return mutated
 
 
-def scramble(chromosome: np.ndarray) -> np.ndarray:
+def scramble(
+    chromosome: np.ndarray[np.float64, np.dtype[np.float64]]
+) -> np.ndarray[np.float64, np.dtype[np.float64]]:
     """Performs scramble mutation and returns the new chromosome state.
 
     Args:
-        chromosome (np.ndarray): a chromosome.
+        chromosome (np.ndarray[np.float64, np.dtype[np.float64]]): a chromosome.
 
     Returns:
-        np.ndarray: mutated chromosome.
+        np.ndarray[np.float64, np.dtype[np.float64]]: mutated chromosome.
     """
     rng = np.random.default_rng()
 
@@ -53,14 +57,16 @@ def scramble(chromosome: np.ndarray) -> np.ndarray:
     )
 
 
-def inversion(chromosome: np.ndarray) -> np.ndarray:
+def inversion(
+    chromosome: np.ndarray[np.float64, np.dtype[np.float64]]
+) -> np.ndarray[np.float64, np.dtype[np.float64]]:
     """Performs inversion mutation and returns the new chromosome state.
 
     Args:
-        chromosome (np.ndarray): a chromosome.
+        chromosome (np.ndarray[np.float64, np.dtype[np.float64]]): a chromosome.
 
     Returns:
-        np.ndarray: mutated chromosome.
+        np.ndarray[np.float64, np.dtype[np.float64]]: mutated chromosome.
     """
     rng = np.random.default_rng()
 
