@@ -42,9 +42,10 @@ The [rules](https://www.worldothello.org/about/about-othello/othello-rules/offic
 
 - [x] Game mechanisms
 - [x] Game graphics
-- [ ] Minimax algorithm
-  - [ ] Classic
-  - [ ] αβ-pruning
+- [x] Minimax algorithm
+  - [x] Classic
+  - [x] αβ-pruning
+  - [x] Genetic weights
 - [ ] Convolutional Neural Network
 - [ ] Reinforcement Learning
 
