@@ -61,6 +61,14 @@ Distributed under the Creative Commons Zero v1.0 Universal License. See `LICENSE
 
 ## Resources
 
+Genetic algorithms - crossover. Tutorials Point. (n.d.-a). https://www.tutorialspoint.com/genetic_algorithms/genetic_algorithms_crossover.htm
+
+Genetic algorithms - mutation. Tutorials Point. (n.d.-b). https://www.tutorialspoint.com/genetic_algorithms/genetic_algorithms_mutation.htm
+
+Mallawaarachchi, V. (2020, March 1). Introduction to genetic algorithms - including example code. Medium. https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3
+
 Official Rules for the game othello. World Othello Federation. (n.d.). https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english
+
+Sannidhanam, V., & Annamalai, M. (2015). An analysis of heuristics in othello.
 
 <p align="right"><a href="#top"><i>back to top</i></a></p>
