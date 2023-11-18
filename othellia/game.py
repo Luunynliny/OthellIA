@@ -13,10 +13,10 @@ from utils.game import notation_to_cell_index
 class Game:
     """Class gathering all the game's behaviours."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.reset_game()
 
-    def reset_game(self):
+    def reset_game(self) -> None:
         """Reset the game board into initial configuration."""
         self.board = np.full(
             (BOARD_CELL_LENGTH, BOARD_CELL_LENGTH), EMPTY_VALUE, dtype=int
@@ -56,9 +56,9 @@ class Game:
             bool: non-presence of a piece.
         """
         col, row = cell_index
-        return self.board[row, col] == EMPTY_VALUE
+        return bool(self.board[row, col] == EMPTY_VALUE)
 
-    def play_piece(self, cell_index: tuple[int, int]):
+    def play_piece(self, cell_index: tuple[int, int]) -> None:
         """Play a piece in a cell and update the board according.
 
         Args:
@@ -88,7 +88,7 @@ class Game:
 
         return bool(np.any(np.all(self.indicators == cell_index, axis=1)))
 
-    def update_sandwiches(self):
+    def update_sandwiches(self) -> None:
         """Find all the sandwiches from available legal moves.
 
         Returns:
@@ -96,11 +96,11 @@ class Game:
         """
         self.sandwiches = {}
 
-        if self.surrounding_cells is not None:
+        if len(self.surrounding_cells != 0):
             for cell_index in self.surrounding_cells:
                 cell_sandwiches = self.search_cell_sandwiches(cell_index)
 
-                if cell_sandwiches is None:
+                if len(cell_sandwiches) == 0:
                     continue
 
                 x, y = cell_index
@@ -108,17 +108,17 @@ class Game:
 
     def search_cell_sandwiches(
         self, cell_index: tuple[int, int]
-    ) -> np.ndarray | None:
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Find all possible sandwiches from a single cell.
 
         Args:
             cell_index (tuple[int, int]): cell's column and row.
 
         Returns:
-            np.ndarray | None: cell indices within the sandwiches,
-            None if no sandwiches.
+            np.ndarray[tuple[int, int], np.dtype[np.int64]]: cell indices within the
+            sandwiches.
         """
-        sandwiches: list[np.ndarray] = []
+        sandwiches: list[tuple[int, int]] = []
 
         # Loop for sandwiches in all directions
         for direction in DIRECTIONS:
@@ -126,34 +126,31 @@ class Game:
                 cell_index, direction
             )
 
-            if cell_indices is None:
+            if len(cell_indices) == 0:
                 continue
 
             sandwiches.extend(cell_indices)
 
-        return np.array(sandwiches) if len(sandwiches) > 0 else None
+        return np.array(sandwiches)
 
     def search_cell_sandwich_towards(
         self,
         cell_index: tuple[int, int],
         direction: tuple[int, int],
-    ) -> np.ndarray | None:
-        """Find if a sanwich, if possible, in a given directory from a cell.
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
+        """Find if a sandwich, if possible, in a given directory from a cell.
 
         Args:
             cell_index (tuple[int, int]): column and row of the cell.
             direction (tuple[int, int]): direction of the search.
 
         Returns:
-            np.ndarray | None: cell indices within the sandwich, None if no sandwich.
+            npt.ArrayLike[tuple[int, int]]: cell indices within the sandwich.
         """
         consecutive = 0
         is_sandwich_end = False
 
         cvt = self.cell_values_toward(cell_index, direction)
-
-        if cvt is None:
-            return None
 
         for cell_value in cvt:
             # Check for the end of the sandwich
@@ -179,12 +176,12 @@ class Game:
                 dtype=(int, 2),
             )
             if consecutive > 0 and is_sandwich_end
-            else None
+            else np.array([])
         )
 
     def cell_values_toward(
         self, cell_index: tuple[int, int], direction: tuple[int, int]
-    ) -> np.ndarray | None:
+    ) -> np.ndarray[np.int64, np.dtype[np.int64]]:
         """Return all the cells value toward a cell in a given direction.
 
         Args:
@@ -192,7 +189,8 @@ class Game:
             direction (tuple[int, int]): direction of the search.
 
         Returns:
-            np.ndarray | None: cells value in the given direction.
+            np.ndarray[np.int64, np.dtype[np.int64]]: cells value in the given
+            direction.
         """
         x, y = cell_index
 
@@ -214,31 +212,29 @@ class Game:
             case (-1, -1):
                 values = np.flipud(np.fliplr(self.board[:y, :x])).diagonal()
 
-        return values if len(values) > 0 else None
+        return values
 
-    def update_surrounding_cells(self):
+    def update_surrounding_cells(self) -> None:
         """Find the empty cells surrounding the pieces cluster."""
-        surrounding_cells = []
+        surrounding_cells: list[tuple[int, int]] = []
 
         for cell_index in self.get_all_non_empty_cells():
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
-            if empty_neighbors is None:
+            if len(empty_neighbors) == 0:
                 continue
 
             surrounding_cells.extend(empty_neighbors)
 
-        self.surrounding_cells = (
-            np.array(np.unique(surrounding_cells, axis=0))
-            if len(surrounding_cells) > 0
-            else None
-        )
+        self.surrounding_cells = np.array(np.unique(surrounding_cells, axis=0))
 
-    def get_all_non_empty_cells(self) -> np.ndarray | None:
+    def get_all_non_empty_cells(
+        self,
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Return all non-empty cells on the board.
 
         Returns:
-            np.ndarray | None: cells column and row, None if no empty cells.
+            np.ndarray[tuple[int, int], np.dtype[np.int64]]: cells column and row.
         """
         cells = []
 
@@ -251,13 +247,15 @@ class Game:
 
                 cells.append((col, row))
 
-        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+        return np.array(cells)
 
-    def get_all_black_cells(self) -> np.ndarray | None:
+    def get_all_black_cells(
+        self,
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Return all blck cells on the board.
 
         Returns:
-            np.ndarray | None: cells column and row, None if no black cells.
+            np.ndarray[tuple[int, int]: cells column and row.
         """
         cells = []
 
@@ -270,13 +268,15 @@ class Game:
 
                 cells.append((col, row))
 
-        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+        return np.array(cells)
 
-    def get_all_white_cells(self) -> np.ndarray | None:
+    def get_all_white_cells(
+        self,
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Return all white cells on the board.
 
         Returns:
-            np.ndarray | None: cells column and row, None if no white cells.
+            np.ndarray[tuple[int, int], np.dtype[np.int64]]: cells column and row.
         """
         cells = []
 
@@ -289,18 +289,18 @@ class Game:
 
                 cells.append((col, row))
 
-        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+        return np.array(cells)
 
     def get_empty_neighbors(
         self, cell_index: tuple[int, int]
-    ) -> np.ndarray | None:
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Retrieve all the empty neighbors of a given cell.
 
         Args:
             cell_index (tuple[int, int]): cell's column and row.
 
         Returns:
-            np.ndarray | None: cells column and row, None if no empty neighbors.
+            np.ndarray[tuplr[int, int]]: cells column and row.
         """
         row, col = cell_index
         neighbors = []
@@ -329,22 +329,22 @@ class Game:
 
                 neighbors.append((nx, ny))
 
-        return (
-            np.array(neighbors, dtype=(int, 2)) if len(neighbors) > 0 else None
-        )
+        return np.array(neighbors)
 
-    def update_indicators(self):
+    def update_indicators(self) -> None:
         """Update the move indicators positions according the possible sandwiches."""
-        self.indicators = []
+        cells = []
 
         if len(self.sandwiches) > 0:
             for k in self.sandwiches.keys():
                 col, row = list(map(int, k.split(",")))
-                self.indicators.append((col, row))
+                cells.append((col, row))
 
-            self.indicators = np.array(self.indicators, dtype=(int, 2))
+        self.indicators: np.ndarray[
+            tuple[int, int], np.dtype[np.int64]
+        ] = np.array(cells)
 
-    def flip_sandwiches(self, indicator_index: tuple[int, int]):
+    def flip_sandwiches(self, indicator_index: tuple[int, int]) -> None:
         """Flip all the pieces within the available sandwiches from an indicator's
         location.
 
@@ -352,8 +352,11 @@ class Game:
             indicator_index (tuple[int, int]): column and row of an indicator.
         """
         key = f"{indicator_index[0]},{indicator_index[1]}"
+        _get = self.sandwiches.get(key)
 
-        for col, row in self.sandwiches.get(key):
+        cells_to_flip = _get if _get is not None else []
+
+        for col, row in cells_to_flip:
             self.board[row, col] *= -1
 
     def is_player_able_to_play(self) -> bool:
@@ -370,7 +373,7 @@ class Game:
         Returns:
             int: number of black pieces.
         """
-        return (self.board == BLACK_VALUE).sum()
+        return int(np.sum(self.board == BLACK_VALUE))
 
     def get_white_piece_count(self) -> int:
         """Return the number of white pieces on the board.
@@ -378,7 +381,7 @@ class Game:
         Returns:
             int: number of black pieces.
         """
-        return (self.board == WHITE_VALUE).sum()
+        return int(np.sum(self.board == WHITE_VALUE))
 
     def get_winner(self) -> int:
         """Return the value of the player who won the game.
@@ -399,13 +402,13 @@ class Game:
             else WHITE_VALUE
         )
 
-    def update_ssi(self):
+    def update_ssi(self) -> None:
         """Updates the game surrounding cells, sandwiches and indicators."""
         self.update_surrounding_cells()
         self.update_sandwiches()
         self.update_indicators()
 
-    def next_player_turn(self):
+    def next_player_turn(self) -> None:
         """Update the next player value or declare the game over."""
         self.player_value *= -1
         self.update_ssi()
@@ -419,7 +422,7 @@ class Game:
                 # Neither player has legal moves left
                 self.is_over = True
 
-    def load_transcript(self, transcript: str):
+    def load_transcript(self, transcript: str) -> None:
         """Play each player move from a match transcription.
 
         Args:
@@ -428,12 +431,14 @@ class Game:
         for move in wrap(transcript, 2):
             self.play_piece(notation_to_cell_index(move))
 
-    def set_position(self, board: np.ndarray, to_play: int):
+    def set_position(
+        self, board: np.ndarray[np.int64, np.dtype[np.int64]], to_play: int
+    ) -> None:
         """Set a board position and update surrounding cells, sandwiches and indicators
         for a player to play.
 
         Args:
-            board (np.ndarray): a board position.
+            board (np.ndarray[np.int64, np.dtype[np.int64]]): a board position.
             to_play (int): value of the player to play.
         """
         self.board = board
@@ -441,11 +446,14 @@ class Game:
 
         self.update_ssi()
 
-    def get_black_legal_moves(self) -> np.ndarray:
+    def get_black_legal_moves(
+        self,
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Return all black possible moves to play.
 
         Returns:
-            np.ndarray: list of cells row and column.
+            np.ndarray[tuple[int, int], np.dtype[np.int64]]: list of cells row and
+            column.
         """
         game_copy = deepcopy(self)  # Copy the game without reference
 
@@ -454,11 +462,14 @@ class Game:
 
         return game_copy.indicators
 
-    def get_white_legal_moves(self) -> np.ndarray:
+    def get_white_legal_moves(
+        self,
+    ) -> np.ndarray[tuple[int, int], np.dtype[np.int64]]:
         """Return all white possible moves to play.
 
         Returns:
-            np.ndarray: list of cells row and column.
+            np.ndarray[tuple[int, int], np.dtype[np.int64]]: list of cells row and
+            column.
         """
         game_copy = deepcopy(self)  # Copy the game without reference
 
@@ -491,14 +502,14 @@ class Game:
         """
         black_cells = self.get_all_black_cells()
 
-        if black_cells is None:
+        if len(black_cells) == 0:
             return 0
 
-        empty_cells: list[np.ndarray] = []
+        empty_cells: list[np.ndarray[tuple[int, int], np.dtype[np.int64]]] = []
         for cell_index in black_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
-            if empty_neighbors is None:
+            if len(empty_neighbors) == 0:
                 continue
 
             empty_cells.extend(empty_neighbors)
@@ -513,14 +524,14 @@ class Game:
         """
         white_cells = self.get_all_white_cells()
 
-        if white_cells is None:
+        if len(white_cells) == 0:
             return 0
 
-        empty_cells: list[np.ndarray] = []
+        empty_cells: list[np.ndarray[tuple[int, int], np.dtype[np.int64]]] = []
         for cell_index in white_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
-            if empty_neighbors is None:
+            if len(empty_neighbors) == 0:
                 continue
 
             empty_cells.extend(empty_neighbors)
