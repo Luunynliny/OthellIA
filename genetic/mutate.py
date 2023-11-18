@@ -40,10 +40,13 @@ def scramble(chromosome: np.ndarray) -> np.ndarray:
 
     i1, i2 = to_scramble_indices
 
+    shuffled = chromosome[i1 : i2 + 1].copy()
+    rng.shuffle(shuffled)
+
     return np.concatenate(
         [
             chromosome[:i1],
-            rng.shuffle(chromosome[i1 : i2 + 1]),
+            shuffled,
             chromosome[i2 + 1 :],
         ],
         axis=None,

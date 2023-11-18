@@ -33,9 +33,7 @@ def test_scramble(monkeypatch):
             return values[i - 1]
 
         def shuffle(self, a):
-            b = a.copy()
-            b[0], b[-1] = b[-1], b[0]
-            return b
+            a[0], a[-1] = a[-1], a[0]
 
     monkeypatch.setattr(np.random, "default_rng", Mock_default_rng)
 
