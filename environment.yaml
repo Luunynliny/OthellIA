@@ -2,7 +2,11 @@ name: othellia
 channels:
   - conda-forge
 dependencies:
-  - pygame
+  - jupyter
+  - matplotlib
   - numpy
+  - pandas
+  - pygame
   - pytest
-  - pytest-cov
+  - seaborn
+  - tqdm
