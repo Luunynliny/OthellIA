@@ -24,4 +24,5 @@ jobs:
       run: |
         conda env update --file environment.yaml --name base
     - name: Run static type checking
+      run: |
         mypy .
