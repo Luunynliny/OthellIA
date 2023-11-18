@@ -1,3 +1,4 @@
+import os
 from typing import Type
 
 import numpy as np
@@ -24,6 +25,9 @@ class StaticEvaluation:
         0.1,
         0.2,
     )
+
+    # Path to weights determine by a genetic algorithm
+    genetic_weights_path = os.path.abspath("data/genetic_best_chromosome.txt")
 
     @staticmethod
     def coin_parity(game: Type[Game]) -> float:
@@ -221,7 +225,7 @@ class StaticEvaluation:
 
     @staticmethod
     def set_evaluation_weights(
-        weights: tuple[float, float, float, float, float, float]
+        weights: tuple[float, float, float, float, float, float],
     ):
         """Set the weights for the `evaluate()` function.
 
@@ -230,3 +234,11 @@ class StaticEvaluation:
             weights.
         """
         StaticEvaluation.evaluation_weights = weights
+
+    @staticmethod
+    def load_evaluation_weights():
+        """Load the weights for the `evaluate()` function from the results of the
+        genetic algorithm."""
+        StaticEvaluation.evaluation_weights = tuple(
+            np.loadtxt(StaticEvaluation.genetic_weights_path)
+        )

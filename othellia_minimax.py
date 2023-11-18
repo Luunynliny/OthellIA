@@ -29,6 +29,9 @@ if __name__ == "__main__":
     game = Game()
     static_evaluation = StaticEvaluation()
 
+    # Set genetic evulation weights
+    static_evaluation.load_evaluation_weights()
+
     running = True
     is_game_over = False
 
@@ -55,7 +58,7 @@ if __name__ == "__main__":
                     best_move = think(
                         game,
                         depth=2,
-                        static_evaluation_func=static_evaluation.coin_parity,
+                        static_evaluation_func=static_evaluation.evaluate,
                     )
                     game.play_piece(best_move)
 

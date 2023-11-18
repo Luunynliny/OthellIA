@@ -292,12 +292,25 @@ def test_static_weights(game, static_evaluation, rng):
     assert static_evaluation.static_weights(game) == 3
 
 
-def test_set_evaluation_weights(game, static_evaluation):
+def test_set_evaluation_weights(static_evaluation):
     weights = (3, 2, 4, -1, 0, 10)
     static_evaluation.set_evaluation_weights(weights)
 
     assert np.array_equal(
         static_evaluation.evaluation_weights, (3, 2, 4, -1, 0, 10)
+    )
+
+
+def test_load_genetic_evaluation_weights(static_evaluation, monkeypatch):
+    def mock_loadtxt(file_path):
+        return np.array([1.111, 2.222, 3.333, 4.444, 5.555, 6.666])
+
+    monkeypatch.setattr(np, "loadtxt", mock_loadtxt)
+
+    static_evaluation.load_evaluation_weights()
+
+    assert static_evaluation.evaluation_weights == pytest.approx(
+        (1.11, 2.22, 3.33, 4.44, 5.55, 6.66), rel=1e-3
     )
 
 
