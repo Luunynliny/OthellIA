@@ -1,20 +1,21 @@
 import numpy as np
+from numpy import typing as npt
 
 
 def one_point_crossover(
-    p1: np.ndarray, p2: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+    p1: npt.NDArray[np.float64], p2: npt.NDArray[np.float64]
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """Performs one-point crossover on two parent chromosomes and retuns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.
 
     Args:
-        p1 (np.ndarray): first parent chromosome.
-        p2 (np.ndarray): second parent chromosome.
+        p1 (npt.NDArray[np.float64]): first parent chromosome.
+        p2 (npt.NDArray[np.float64]): second parent chromosome.
 
     Returns:
-        tuple[np.ndarray, np.ndarray]: child chromosomes.
+        tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]: child chromosomes.
     """
     rng = np.random.default_rng()
 
@@ -27,19 +28,19 @@ def one_point_crossover(
 
 
 def two_point_crossover(
-    p1: np.ndarray, p2: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+    p1: npt.NDArray[np.float64], p2: npt.NDArray[np.float64]
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """Performs two-point crossover on two parent chromosomes and retuns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.
 
     Args:
-        p1 (np.ndarray): first parent chromosome.
-        p2 (np.ndarray): second parent chromosome.
+        p1 (npt.NDArray[np.float64]): first parent chromosome.
+        p2 (npt.NDArray[np.float64]): second parent chromosome.
 
     Returns:
-        tuple[np.ndarray, np.ndarray]: child chromosomes.
+        tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]: child chromosomes.
     """
     rng = np.random.default_rng()
 
@@ -55,20 +56,20 @@ def two_point_crossover(
 
 
 def uniform_crossover(
-    p1: np.ndarray, p2: np.ndarray, p_swap: int
-) -> tuple[np.ndarray, np.ndarray]:
+    p1: npt.NDArray[np.float64], p2: npt.NDArray[np.float64], p_swap: float
+) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     """Performs uniform crossover on two parent chromosomes and retuns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.
 
     Args:
-        p1 (np.ndarray): first parent chromosome.
-        p2 (np.ndarray): second parent chromosome.
-        p_swap(int): probability of gene swapping.
+        p1 (npt.NDArray[np.float64]): first parent chromosome.
+        p2 (npt.NDArray[np.float64]): second parent chromosome.
+        p_swap(float): probability of gene swapping.
 
     Returns:
-        tuple[np.ndarray, np.ndarray]: child chromosomes.
+        tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]: child chromosomes.
     """
     rng = np.random.default_rng()
 
