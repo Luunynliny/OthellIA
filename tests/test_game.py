@@ -1,9 +1,8 @@
 import numpy as np
 import pytest
 
-from game import Game
+from othellia.game import Game
 from settings.board import BOARD_CELL_LENGTH
-from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from settings.directions import (
     DOWN,
     DOWN_LEFT,
@@ -15,12 +14,18 @@ from settings.directions import (
     UP_RIGHT,
 )
 from settings.graphics import HEIGHT, WIDTH
+from settings.values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from utils.test import dict_to_str
 
 
 @pytest.fixture
 def game():
     return Game()
+
+
+@pytest.fixture
+def rng():
+    return np.random.default_rng()
 
 
 def test_piece_values():
@@ -203,7 +208,7 @@ def test_play_piece(game):
     )
 
 
-def test_is_move_legal(game):
+def test_is_move_legal(game, rng):
     legal_move = (3, 2)
     illegal_move = (0, 0)
 
@@ -212,7 +217,7 @@ def test_is_move_legal(game):
 
     game.board.fill(BLACK_VALUE)
     game.update_ssi()
-    move = np.random.randint(BOARD_CELL_LENGTH, size=2)
+    move = rng.integers(BOARD_CELL_LENGTH, size=2)
 
     assert not game.is_move_legal(move)
 
@@ -442,7 +447,89 @@ def test_get_all_non_empty_cells(game):
     )
 
 
-def test_get_empty_neighbors(game):
+def test_get_all_white_cells(game):
+    assert np.array_equal(
+        game.get_all_white_cells(),
+        np.array([(3, 3), (4, 4)], dtype=(int, 2)),
+    )
+
+    game.board[4, 5] = BLACK_VALUE
+    game.board[5, 3] = WHITE_VALUE
+
+    assert np.array_equal(
+        game.get_all_white_cells(),
+        np.array([(3, 3), (3, 5), (4, 4)], dtype=(int, 2)),
+    )
+
+    game.board.fill(EMPTY_VALUE)
+
+    assert game.get_all_white_cells() is None
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, -1, 1, 0, 0],
+            [0, 0, 1, -1, 1, 0, 0, 0],
+            [0, 0, -1, 1, -1, 0, 0, 0],
+            [0, 0, 0, -1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert np.array_equal(
+        game.get_all_white_cells(),
+        np.array(
+            [(2, 4), (3, 3), (3, 5), (4, 2), (4, 4)],
+            dtype=(int, 2),
+        ),
+    )
+
+
+def test_get_all_black_cells(game):
+    assert np.array_equal(
+        game.get_all_black_cells(),
+        np.array([(3, 4), (4, 3)], dtype=(int, 2)),
+    )
+
+    game.board[4, 5] = BLACK_VALUE
+    game.board[5, 3] = WHITE_VALUE
+
+    assert np.array_equal(
+        game.get_all_black_cells(),
+        np.array([(3, 4), (4, 3), (5, 4)], dtype=(int, 2)),
+    )
+
+    game.board.fill(EMPTY_VALUE)
+
+    assert game.get_all_black_cells() is None
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, -1, 1, 0, 0],
+            [0, 0, 1, -1, 1, 0, 0, 0],
+            [0, 0, -1, 1, -1, 0, 0, 0],
+            [0, 0, 0, -1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert np.array_equal(
+        game.get_all_black_cells(),
+        np.array(
+            [(2, 3), (3, 2), (3, 4), (4, 3), (4, 5), (5, 2)],
+            dtype=(int, 2),
+        ),
+    )
+
+
+def test_get_empty_neighbors(game, rng):
     cell_index = (0, 0)
 
     assert np.array_equal(
@@ -458,7 +545,7 @@ def test_get_empty_neighbors(game):
     )
 
     game.board.fill(BLACK_VALUE)
-    cell_index = np.random.randint(BOARD_CELL_LENGTH, size=2)
+    cell_index = rng.integers(BOARD_CELL_LENGTH, size=2)
 
     assert game.get_empty_neighbors(cell_index) is None
 
@@ -1012,3 +1099,394 @@ def test_load_transcript(game):
         ),
     )
     assert game.player_value == BLACK_VALUE
+
+
+def test_set_position(game):
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert np.array_equal(
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, -1, 0, 0, 0],
+                [0, 0, 1, 1, -1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, 0, -1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=int,
+        ),
+    )
+    assert game.player_value == BLACK_VALUE
+    assert np.array_equal(
+        game.surrounding_cells,
+        np.array(
+            [
+                (1, 2),
+                (1, 3),
+                (1, 4),
+                (2, 2),
+                (2, 4),
+                (2, 5),
+                (3, 1),
+                (3, 2),
+                (3, 5),
+                (3, 6),
+                (4, 1),
+                (4, 6),
+                (5, 1),
+                (5, 2),
+                (5, 3),
+                (5, 4),
+                (5, 6),
+                (6, 4),
+                (6, 5),
+                (6, 6),
+            ],
+            dtype=(int, 2),
+        ),
+    )
+    assert dict_to_str(game.sandwiches) == dict_to_str(
+        {
+            "3,5": np.array([[4, 5]]),
+            "5,1": np.array([[4, 2]]),
+            "5,2": np.array([[4, 3]]),
+            "5,3": np.array([[4, 3]]),
+            "5,4": np.array([[4, 4]]),
+            "5,6": np.array([[4, 5]]),
+        }
+    )
+    assert np.array_equal(
+        game.indicators,
+        np.array(
+            [(3, 5), (5, 1), (5, 2), (5, 3), (5, 4), (5, 6)], dtype=(int, 2)
+        ),
+    )
+
+    game.set_position(board, WHITE_VALUE)
+
+    assert np.array_equal(
+        game.board,
+        np.array(
+            [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, -1, 0, 0, 0],
+                [0, 0, 1, 1, -1, 0, 0, 0],
+                [0, 0, 0, 1, -1, 0, 0, 0],
+                [0, 0, 0, 0, -1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+            ],
+            dtype=int,
+        ),
+    )
+    assert game.player_value == WHITE_VALUE
+    assert np.array_equal(
+        game.surrounding_cells,
+        np.array(
+            [
+                (1, 2),
+                (1, 3),
+                (1, 4),
+                (2, 2),
+                (2, 4),
+                (2, 5),
+                (3, 1),
+                (3, 2),
+                (3, 5),
+                (3, 6),
+                (4, 1),
+                (4, 6),
+                (5, 1),
+                (5, 2),
+                (5, 3),
+                (5, 4),
+                (5, 6),
+                (6, 4),
+                (6, 5),
+                (6, 6),
+            ],
+            dtype=(int, 2),
+        ),
+    )
+    assert dict_to_str(game.sandwiches) == dict_to_str(
+        {
+            "1,2": np.array([[2, 3], [3, 4]]),
+            "1,3": np.array([[2, 3], [3, 3]]),
+            "2,2": np.array([[3, 3]]),
+            "2,4": np.array([[3, 4], [3, 3]]),
+            "2,5": np.array([[3, 4]]),
+            "6,5": np.array([[5, 5]]),
+            "6,6": np.array([[5, 5]]),
+        }
+    )
+    assert np.array_equal(
+        game.indicators,
+        np.array(
+            [(1, 2), (1, 3), (2, 2), (2, 4), (2, 5), (6, 5), (6, 6)],
+            dtype=(int, 2),
+        ),
+    )
+
+
+def test_get_black_legal_moves(game):
+    assert np.array_equal(
+        game.get_black_legal_moves(),
+        np.array([(2, 3), (3, 2), (4, 5), (5, 4)], dtype=(int, 2)),
+    )
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert np.array_equal(game.get_black_legal_moves(), np.array([]))
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert np.array_equal(
+        game.get_black_legal_moves(),
+        np.array([(3, 5), (5, 1), (5, 2), (5, 3), (5, 4), (5, 6)], dtype=int),
+    )
+
+
+def test_get_white_legal_moves(game):
+    assert np.array_equal(
+        game.get_white_legal_moves(),
+        np.array([(2, 4), (3, 5), (4, 2), (5, 3)], dtype=(int, 2)),
+    )
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert np.array_equal(game.get_white_legal_moves(), np.array([]))
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert np.array_equal(
+        game.get_white_legal_moves(),
+        np.array(
+            [(1, 2), (1, 3), (2, 2), (2, 4), (2, 5), (6, 5), (6, 6)], dtype=int
+        ),
+    )
+
+
+def test_get_black_legal_moves_count(game):
+    assert game.get_black_legal_moves_count() == 4
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert game.get_black_legal_moves_count() == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert game.get_black_legal_moves_count() == 6
+
+
+def test_get_white_legal_moves_count(game):
+    assert game.get_white_legal_moves_count() == 4
+
+    board = np.array(
+        [
+            [-1, 0, -1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, -1, -1, 1, 1, 1],
+            [-1, 0, 1, 0, -1, 0, 1, 0],
+            [-1, 1, 1, 1, 1, 1, 1, 1],
+            [-1, 0, 1, 0, 1, 0, 1, 0],
+            [-1, 1, -1, -1, -1, 1, -1, 1],
+            [-1, 0, -1, 0, 1, 0, 1, 0],
+            [-1, -1, -1, -1, -1, -1, -1, 1],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, WHITE_VALUE)
+
+    assert game.get_white_legal_moves_count() == 0
+
+    board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+    game.set_position(board, BLACK_VALUE)
+
+    assert game.get_white_legal_moves_count() == 7
+
+
+def test_get_black_empty_neighbors_count(game, rng):
+    assert game.get_black_empty_neighbors_count() == 10
+
+    game.board.fill(*rng.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert game.get_black_empty_neighbors_count() == 0
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_black_empty_neighbors_count() == 14
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 0, -1, -1, -1, 0, 0],
+            [0, 0, -1, -1, -1, -1, -1, 0],
+            [0, 0, 0, -1, -1, -1, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_black_empty_neighbors_count() == 0
+
+
+def test_get_white_empty_neighbors_count(game, rng):
+    assert game.get_white_empty_neighbors_count() == 10
+
+    game.board.fill(*rng.choice([BLACK_VALUE, WHITE_VALUE], 1))
+
+    assert game.get_white_empty_neighbors_count() == 0
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, -1, 0, 0, 0],
+            [0, 0, 1, 1, -1, 0, 0, 0],
+            [0, 0, 0, 1, -1, 0, 0, 0],
+            [0, 0, 0, 0, -1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_white_empty_neighbors_count() == 11
+
+    game.board = np.array(
+        [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 1, 1, 1, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+        ],
+        dtype=int,
+    )
+
+    assert game.get_white_empty_neighbors_count() == 0

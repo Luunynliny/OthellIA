@@ -1,11 +1,12 @@
+from copy import deepcopy
 from textwrap import wrap
 
 import numpy as np
 
 from settings.board import BOARD_CELL_LENGTH
-from settings.cell_values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from settings.directions import DIRECTIONS
 from settings.graphics import WIDTH
+from settings.values import BLACK_VALUE, EMPTY_VALUE, WHITE_VALUE
 from utils.game import notation_to_cell_index
 
 
@@ -253,6 +254,44 @@ class Game:
 
         return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
 
+    def get_all_black_cells(self) -> np.ndarray | None:
+        """Return all blck cells on the board.
+
+        Returns:
+            np.ndarray | None: cells column and row, None if no black cells.
+        """
+        cells = []
+
+        for col in range(BOARD_CELL_LENGTH):
+            for row in range(BOARD_CELL_LENGTH):
+                value = self.board[row, col]
+
+                if value != BLACK_VALUE:
+                    continue
+
+                cells.append((col, row))
+
+        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+
+    def get_all_white_cells(self) -> np.ndarray | None:
+        """Return all white cells on the board.
+
+        Returns:
+            np.ndarray | None: cells column and row, None if no white cells.
+        """
+        cells = []
+
+        for col in range(BOARD_CELL_LENGTH):
+            for row in range(BOARD_CELL_LENGTH):
+                value = self.board[row, col]
+
+                if value != WHITE_VALUE:
+                    continue
+
+                cells.append((col, row))
+
+        return np.array(cells, dtype=(int, 2)) if len(cells) > 0 else None
+
     def get_empty_neighbors(
         self, cell_index: tuple[int, int]
     ) -> np.ndarray | None:
@@ -389,3 +428,102 @@ class Game:
         """
         for move in wrap(transcript, 2):
             self.play_piece(notation_to_cell_index(move))
+
+    def set_position(self, board: np.ndarray, to_play: int):
+        """Set a board position and update surrounding cells, sandwiches and indicators
+        for a player to play.
+
+        Args:
+            board (np.ndarray): a board position.
+            to_play (int): value of the player to play.
+        """
+        self.board = board
+        self.player_value = to_play
+
+        self.update_ssi()
+
+    def get_black_legal_moves(self) -> np.ndarray:
+        """Return all black possible moves to play.
+
+        Returns:
+            np.ndarray: list of cells row and column.
+        """
+        game_copy = deepcopy(self)  # Copy the game without reference
+
+        game_copy.player_value = BLACK_VALUE
+        game_copy.update_ssi()
+
+        return game_copy.indicators
+
+    def get_white_legal_moves(self) -> np.ndarray:
+        """Return all white possible moves to play.
+
+        Returns:
+            np.ndarray: list of cells row and column.
+        """
+        game_copy = deepcopy(self)  # Copy the game without reference
+
+        game_copy.player_value = WHITE_VALUE
+        game_copy.update_ssi()
+
+        return game_copy.indicators
+
+    def get_black_legal_moves_count(self) -> int:
+        """Returns the number of black's legal moves.
+
+        Returns:
+            int: number of legal moves.
+        """
+        return len(self.get_black_legal_moves())
+
+    def get_white_legal_moves_count(self) -> int:
+        """Returns the number of white's legal moves.
+
+        Returns:
+            int: number of legal moves.
+        """
+        return len(self.get_white_legal_moves())
+
+    def get_black_empty_neighbors_count(self) -> int:
+        """Returns the number of empty cells next to black's pieces.
+
+        Returns:
+            int: number of empty cells.
+        """
+        black_cells = self.get_all_black_cells()
+
+        if black_cells is None:
+            return 0
+
+        empty_cells = []
+        for cell_index in black_cells:
+            empty_neighbors = self.get_empty_neighbors(cell_index)
+
+            if empty_neighbors is None:
+                continue
+
+            empty_cells.extend(empty_neighbors)
+
+        return len(np.unique(empty_cells, axis=0))
+
+    def get_white_empty_neighbors_count(self) -> int:
+        """Returns the number of empty cells next to white's pieces.
+
+        Returns:
+            int: number of empty cells.
+        """
+        white_cells = self.get_all_white_cells()
+
+        if white_cells is None:
+            return 0
+
+        empty_cells = []
+        for cell_index in white_cells:
+            empty_neighbors = self.get_empty_neighbors(cell_index)
+
+            if empty_neighbors is None:
+                continue
+
+            empty_cells.extend(empty_neighbors)
+
+        return len(np.unique(empty_cells, axis=0))
