@@ -1,6 +1,8 @@
 from itertools import permutations
+from math import factorial
 
 import numpy as np
+from tqdm.notebook import tqdm
 
 from othellia.game import Game
 from othellia.minimax import think
@@ -58,10 +60,16 @@ def play_tournament(chromosomes: np.ndarray, depth: int) -> np.ndarray:
     Returns:
         np.ndarray: list of chromosomes score.
     """
-    scores = np.zeros(len(chromosomes))
+    N_CHROMOSOMES = len(chromosomes)
+
+    scores = np.zeros(N_CHROMOSOMES)
 
     # Iterate over each possible chromosome index pairs
-    for b_index, w_index in permutations(range(len(chromosomes)), 2):
+    for b_index, w_index in tqdm(
+        permutations(range(N_CHROMOSOMES), 2),
+        desc="Tournament",
+        total=factorial(N_CHROMOSOMES) // factorial(N_CHROMOSOMES - 2),
+    ):
         winner, _ = play_match(
             chromosomes[b_index], chromosomes[w_index], depth
         )

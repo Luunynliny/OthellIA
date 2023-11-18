@@ -45,7 +45,8 @@ def scramble(chromosome: np.ndarray) -> np.ndarray:
             chromosome[:i1],
             rng.shuffle(chromosome[i1 : i2 + 1]),
             chromosome[i2 + 1 :],
-        ]
+        ],
+        axis=None,
     )
 
 
@@ -72,5 +73,6 @@ def inversion(chromosome: np.ndarray) -> np.ndarray:
             chromosome[:i1],
             chromosome[i1 : i2 + 1][::-1],
             chromosome[i2 + 1 :],
-        ]
+        ],
+        axis=None,
     )
