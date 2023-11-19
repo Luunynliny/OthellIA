@@ -4,9 +4,9 @@
 
 [![python](https://badges.aleen42.com/src/python.svg)](https://www.python.org/)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
+[![CodeQL](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql)
 ![pytest](https://github.com/Luunynliny/othellia/actions/workflows/python-pytest.yaml/badge.svg)
 [![codecov](https://codecov.io/gh/Luunynliny/othellia/graph/badge.svg?token=U249MOBZOM)](https://codecov.io/gh/Luunynliny/othellia)
-[![CodeQL](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql)
 [![Mypy](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml)
 
 <!-- PROJECT LOGO -->
