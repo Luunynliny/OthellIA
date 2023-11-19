@@ -43,7 +43,7 @@ class Cell(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class Board(pygame.sprite.Group):
+class Board(pygame.sprite.Group):  # type: ignore
     """Sprite group of the board."""
 
     def __init__(self) -> None:
@@ -99,7 +99,7 @@ class Piece(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class PieceLayout(pygame.sprite.Group):
+class PieceLayout(pygame.sprite.Group):  # type: ignore
     """Sprite group of all the pieces on the board."""
 
     def __init__(self) -> None:
@@ -161,7 +161,7 @@ class Indicator(pygame.sprite.Sprite):
         surface.blit(self.image, self.rect)
 
 
-class IndicatorLayout(pygame.sprite.Group):
+class IndicatorLayout(pygame.sprite.Group):  # type: ignore
     """Sprite group of all move indicators."""
 
     def __init__(self) -> None:
