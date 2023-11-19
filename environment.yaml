@@ -13,3 +13,4 @@ dependencies:
   - pytest
   - seaborn
   - tqdm
+  - types-tqdm

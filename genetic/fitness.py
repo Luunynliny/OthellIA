@@ -1,5 +1,6 @@
 from itertools import permutations
 from math import factorial
+from typing import cast
 
 import numpy as np
 from tqdm.notebook import tqdm
@@ -12,13 +13,17 @@ from utils.game import cell_index_to_notation
 
 
 def play_match(
-    chromosome_black: np.ndarray, chromosome_white: np.ndarray, depth: int
+    chromosome_black: np.ndarray[np.float64, np.dtype[np.float64]],
+    chromosome_white: np.ndarray[np.float64, np.dtype[np.float64]],
+    depth: int,
 ) -> tuple[int, str]:
     """Plays an Othello game between two chromosomes and returns the result.
 
     Args:
-        chromosome_black (np.ndarray): a chromosome playing as black.
-        chromosome_white (np.ndarray): a chromosome playing as white.
+        chromosome_black (np.ndarray[np.float64, np.dtype[np.float64]]): a chromosome
+        playing as black.
+        chromosome_white (np.ndarray[np.float64, np.dtype[np.float64]]): a chromosome
+        playing as white.
         depth (int): depth of the minimax search.
 
     Returns:
@@ -33,9 +38,19 @@ def play_match(
     while not game.is_over:
         match game.player_value:
             case values.BLACK_VALUE:
-                static_evaluation.set_evaluation_weights(chromosome_black)
+                static_evaluation.set_evaluation_weights(
+                    cast(
+                        tuple[float, float, float, float, float, float],
+                        chromosome_black,
+                    )
+                )
             case values.WHITE_VALUE:
-                static_evaluation.set_evaluation_weights(chromosome_black)
+                static_evaluation.set_evaluation_weights(
+                    cast(
+                        tuple[float, float, float, float, float, float],
+                        chromosome_white,
+                    )
+                )
 
         # Play best legal move
         move = think(game, depth, static_evaluation.evaluate)
@@ -47,18 +62,21 @@ def play_match(
     return game.get_winner(), transcript
 
 
-def play_tournament(chromosomes: np.ndarray, depth: int) -> np.ndarray:
+def play_tournament(
+    chromosomes: np.ndarray[np.float64, np.dtype[np.float64]], depth: int
+) -> np.ndarray[np.float64, np.dtype[np.float64]]:
     """Runs a tournament by making each chromosomes play against each other as black
     and white, and returns each chromosomes score.
 
     A victory is represented by 1 points, a draw by 0 and a loss by -1.
 
     Args:
-        chromosomes (np.ndarray): population of chromosome.
+        chromosomes (np.ndarray[np.float64, np.dtype[np.float64]]): population of
+        chromosome.
         depth (int): depth of the minimax search.
 
     Returns:
-        np.ndarray: list of chromosomes score.
+        np.ndarray[np.float64, np.dtype[np.float64]]: list of chromosomes score.
     """
     N_CHROMOSOMES = len(chromosomes)
 
