@@ -1,4 +1,7 @@
-def dict_to_str(d: dict) -> str:
+from typing import Any
+
+
+def dict_to_str(d: dict[str, Any]) -> str:
     """Convert a dictionary into a string.
     Used to compare dictionnaries containing NumPy arrays.
 
