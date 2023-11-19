@@ -3,7 +3,7 @@ import pytest
 
 from genetic.fitness import play_match, play_tournament
 from othellia.static_evaluation import StaticEvaluation
-from settings.values import WHITE_VALUE
+from settings.values import BLACK_VALUE
 
 
 @pytest.fixture
@@ -18,11 +18,11 @@ def test_play_match(static_evaluation):
 
     result, transcript = play_match(chromosome1, chromosome2, depth)
 
-    assert result == WHITE_VALUE
+    assert result == BLACK_VALUE
     assert (
         transcript
-        == "c4e3f4c5e6f5d6f6d3c3g4g6h6g7g5h5f8g3h4h8h3h7f7g8e8d8d7h2d2c8f2f3g2c6e7h1e2g"
-        + "1c2f1b6b5c7a6a5c1b2b3a7a4a3b4b7a2a1a8d1b1e1b8"
+        == "c4c3e6b4b3a3b2b1a4a5a1b5c1d2c2a2a6b6c5c6d1e3c7a7d6d7c8b7d3d8e8e2f4e7"
+        + "f8f7f5f3f6g3e1f2g5g4f1g1g2g6a8b8g7g8h5h3h6h4h2h1h8h7"
     )
 
 

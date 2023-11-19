@@ -1,5 +1,5 @@
 import os
-from typing import Type
+from typing import cast
 
 import numpy as np
 
@@ -30,7 +30,7 @@ class StaticEvaluation:
     genetic_weights_path = os.path.abspath("data/genetic_best_chromosome.txt")
 
     @staticmethod
-    def coin_parity(game: Type[Game]) -> float:
+    def coin_parity(game: Game) -> float:
         """Evaluate the proportion of a black and white pieces over the total pieces.
 
         Args:
@@ -42,14 +42,14 @@ class StaticEvaluation:
         black_piece_cnt = game.get_black_piece_count()
         white_piece_cnt = game.get_white_piece_count()
 
-        return (
+        return float(
             100
             * (black_piece_cnt - white_piece_cnt)
             / (black_piece_cnt + white_piece_cnt)
         )
 
     @staticmethod
-    def actual_mobility(game: Type[Game]) -> float:
+    def actual_mobility(game: Game) -> float:
         """Compare the number of black's legal moves over white's ones.
 
         Args:
@@ -64,14 +64,14 @@ class StaticEvaluation:
         if black_actual_mobility + white_actual_mobility == 0:
             return 0
 
-        return (
+        return float(
             100
             * (black_actual_mobility - white_actual_mobility)
             / (black_actual_mobility + white_actual_mobility)
         )
 
     @staticmethod
-    def potential_mobility(game: Type[Game]) -> float:
+    def potential_mobility(game: Game) -> float:
         """Compare the number of empty cells next to white pieces over black pieces.
 
         Args:
@@ -86,14 +86,14 @@ class StaticEvaluation:
         if black_potential_mobility + white_potential_mobility == 0:
             return 0
 
-        return (
+        return float(
             100
             * (black_potential_mobility - white_potential_mobility)
             / (black_potential_mobility + white_potential_mobility)
         )
 
     @staticmethod
-    def corners_captured(game: Type[Game]) -> float:
+    def corners_captured(game: Game) -> float:
         """Compare the number of captured corners of black against white.
 
         Args:
@@ -117,14 +117,14 @@ class StaticEvaluation:
         if black_corner_cnt + white_corner_cnt == 0:
             return 0
 
-        return (
+        return float(
             100
             * (black_corner_cnt - white_corner_cnt)
             / (black_corner_cnt + white_corner_cnt)
         )
 
     @staticmethod
-    def future_corners_captured(game: Type[Game]) -> float:
+    def future_corners_captured(game: Game) -> float:
         """Compare the number of possible corners to be captured by black against white.
 
         Args:
@@ -154,14 +154,14 @@ class StaticEvaluation:
         if black_future_corner_cnt + white_future_corner_cnt == 0:
             return 0
 
-        return (
+        return float(
             100
             * (black_future_corner_cnt - white_future_corner_cnt)
             / (black_future_corner_cnt + white_future_corner_cnt)
         )
 
     @staticmethod
-    def static_weights(game: Type[Game]) -> float:
+    def static_weights(game: Game) -> float:
         """Compare black pieces weights sum against white.
 
         Args:
@@ -180,8 +180,7 @@ class StaticEvaluation:
                 [2, -1, 1, 0, 0, 1, -1, 2],
                 [-3, -4, -1, -1, -1, -1, -4, -3],
                 [4, -3, 2, 2, 2, 2, -3, 4],
-            ],
-            dtype=int,
+            ]
         )
 
         black_weights_sum = 0
@@ -201,13 +200,13 @@ class StaticEvaluation:
         return black_weights_sum - white_weights_sum
 
     @staticmethod
-    def evaluate(game: Type[Game]) -> float:
+    def evaluate(game: Game) -> float:
         """Return the weighted evaluation of respectively coin_parity,
         actual_mobility, potential_mobility, corners_captured,
         future_corners_captured and static_weights scores.
 
         Args:
-            game (Type[Game]): a game.
+            game (Game): a game.
 
         Returns:
             float: evaluation score.
@@ -226,7 +225,7 @@ class StaticEvaluation:
     @staticmethod
     def set_evaluation_weights(
         weights: tuple[float, float, float, float, float, float],
-    ):
+    ) -> None:
         """Set the weights for the `evaluate()` function.
 
         Args:
@@ -236,9 +235,10 @@ class StaticEvaluation:
         StaticEvaluation.evaluation_weights = weights
 
     @staticmethod
-    def load_evaluation_weights():
+    def load_evaluation_weights() -> None:
         """Load the weights for the `evaluate()` function from the results of the
         genetic algorithm."""
-        StaticEvaluation.evaluation_weights = tuple(
-            np.loadtxt(StaticEvaluation.genetic_weights_path)
+        StaticEvaluation.evaluation_weights = cast(
+            tuple[float, float, float, float, float, float],
+            np.loadtxt(StaticEvaluation.genetic_weights_path),
         )

@@ -2,9 +2,12 @@
 
 <!-- PROJECT SHIELDS -->
 
-[![javascript](https://badges.aleen42.com/src/python.svg)](https://www.python.org/)
+[![python](https://badges.aleen42.com/src/python.svg)](https://www.python.org/)
 [![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](http://creativecommons.org/publicdomain/zero/1.0/)
-![example branch parameter](https://github.com/Luunynliny/othellia/actions/workflows/python-pytest.yaml/badge.svg)
+[![CodeQL](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/github-code-scanning/codeql)
+![pytest](https://github.com/Luunynliny/othellia/actions/workflows/python-pytest.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/Luunynliny/othellia/graph/badge.svg?token=U249MOBZOM)](https://codecov.io/gh/Luunynliny/othellia)
+[![Mypy](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml/badge.svg?branch=main)](https://github.com/Luunynliny/othellia/actions/workflows/python-mypy.yaml)
 
 <!-- PROJECT LOGO -->
 
@@ -42,9 +45,10 @@ The [rules](https://www.worldothello.org/about/about-othello/othello-rules/offic
 
 - [x] Game mechanisms
 - [x] Game graphics
-- [ ] Minimax algorithm
-  - [ ] Classic
-  - [ ] αβ-pruning
+- [x] Minimax algorithm
+  - [x] Classic
+  - [x] αβ-pruning
+  - [x] Genetic weights
 - [ ] Convolutional Neural Network
 - [ ] Reinforcement Learning
 
@@ -60,6 +64,14 @@ Distributed under the Creative Commons Zero v1.0 Universal License. See `LICENSE
 
 ## Resources
 
+Genetic algorithms - crossover. Tutorials Point. (n.d.-a). https://www.tutorialspoint.com/genetic_algorithms/genetic_algorithms_crossover.htm
+
+Genetic algorithms - mutation. Tutorials Point. (n.d.-b). https://www.tutorialspoint.com/genetic_algorithms/genetic_algorithms_mutation.htm
+
+Mallawaarachchi, V. (2020, March 1). Introduction to genetic algorithms - including example code. Medium. https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3
+
 Official Rules for the game othello. World Othello Federation. (n.d.). https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english
+
+Sannidhanam, V., & Annamalai, M. (2015). An analysis of heuristics in othello.
 
 <p align="right"><a href="#top"><i>back to top</i></a></p>

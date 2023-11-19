@@ -2,12 +2,16 @@ name: othellia
 channels:
   - conda-forge
 dependencies:
+  - python==3.10
+  - coverage
   - jupyter
   - libstdcxx-ng
   - matplotlib
+  - mypy
   - numpy
   - pandas
   - pygame
   - pytest
   - seaborn
   - tqdm
+  - types-tqdm

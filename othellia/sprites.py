@@ -30,7 +30,7 @@ class Cell(pygame.sprite.Sprite):
         y (int): y-axis top-left pixel position.
     """
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int) -> None:
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
@@ -39,19 +39,19 @@ class Cell(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class Board(pygame.sprite.Group):
+class Board(pygame.sprite.Group):  # type: ignore
     """Sprite group of the board."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.init_board()
 
-    def init_board(self):
+    def init_board(self) -> None:
         """Initiliaze board cells position."""
         for y in range(8):
             for x in range(8):
@@ -74,7 +74,7 @@ class Piece(pygame.sprite.Sprite):
         is_black (bool): color of the piece.
     """
 
-    def __init__(self, row, col, is_black):
+    def __init__(self, row: int, col: int, is_black: bool) -> None:
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
@@ -95,21 +95,21 @@ class Piece(pygame.sprite.Sprite):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class PieceLayout(pygame.sprite.Group):
+class PieceLayout(pygame.sprite.Group):  # type: ignore
     """Sprite group of all the pieces on the board."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def update(self, cells: np.ndarray):
+    def update(self, cells: np.ndarray[np.int64, np.dtype[np.int64]]) -> None:
         """Update the piece layout according the content of all board's cells.
 
         Args:
-            cells (np.ndarray): board's cells.
+            cells (np.ndarray[np.int64, np.dtype[np.int64]]): board's cells.
         """
         self.empty()
 
@@ -135,7 +135,7 @@ class Indicator(pygame.sprite.Sprite):
         col (int): column position on the board.
     """
 
-    def __init__(self, row, col):
+    def __init__(self, row: int, col: int) -> None:
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
@@ -157,21 +157,23 @@ class Indicator(pygame.sprite.Sprite):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class IndicatorLayout(pygame.sprite.Group):
+class IndicatorLayout(pygame.sprite.Group):  # type: ignore
     """Sprite group of all move indicators."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-    def update(self, indicators: np.ndarray):
+    def update(
+        self, indicators: np.ndarray[tuple[int, int], np.dtype[np.int64]]
+    ) -> None:
         """Update the indicator layout.
 
         Args:
-            indicators (np.ndarray): legal moves.
+            indicators (np.ndarray[tuple[int, int], np.dtype[np.int64]]): legal moves.
         """
         self.empty()
 
@@ -186,20 +188,20 @@ class PhantomPiece(pygame.sprite.Sprite):
     replacing an indicator with a semi-transparent version of his piece.
 
     Args:
-        row (_type_): row position on the board.
-        col (_type_): color position on the board.
+        row (int): row position on the board.
+        col (int): color position on the board.
         is_black (bool): color of the piece.
     """
 
-    def __init__(self, row, col, is_black):
+    def __init__(self, row: int, col: int, is_black: bool) -> None:
         super().__init__()
 
         self.image = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
         pygame.draw.circle(
             self.image,
-            color=(*BLACK_PIECE_COLOR, 255 / 2)
+            color=(*BLACK_PIECE_COLOR, int(255 / 2))
             if is_black
-            else (*WHITE_PIECE_COLOR, 255 / 2),
+            else (*WHITE_PIECE_COLOR, int(255 / 2)),
             center=(
                 CELL_SIZE / 2,
                 CELL_SIZE / 2,
@@ -214,7 +216,7 @@ class PhantomPiece(pygame.sprite.Sprite):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
@@ -225,11 +227,11 @@ class EndgameMessage(pygame.sprite.Sprite):
         player_value (int | None): value of the player who won, None if draw.
     """
 
-    def __init__(self, player_value: int | None):
+    def __init__(self, player_value: int | None) -> None:
         super().__init__()
 
         self.image = pygame.Surface((BOARD_SIZE, BOARD_SIZE), pygame.SRCALPHA)
-        self.image.fill((*ENDGAME_MESSAGE_BACKGROUND_COLOR, 255 / 1.5))
+        self.image.fill((*ENDGAME_MESSAGE_BACKGROUND_COLOR, int(255 / 1.5)))
 
         label = (
             "DRAW"
@@ -255,5 +257,5 @@ class EndgameMessage(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, 0)
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
