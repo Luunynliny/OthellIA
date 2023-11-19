@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Callable, Type
+from typing import Callable, cast
 
 import numpy as np
 
@@ -8,22 +8,22 @@ from settings.values import BLACK_VALUE
 
 
 def minimax(
-    game: Type[Game],
+    game: Game,
     depth: int,
     alpha: float,
     beta: float,
-    static_evaluation_func: Callable,
+    static_evaluation_func: Callable[[Game], float],
     maximazing_player: bool,
 ) -> float:
     """Analyse the current board position according to a static evaluation function and
     a depth.
 
     Args:
-        game (Type[Game]): a game.
+        game (Game): a game.
         depth (int): depth of the search.
         alpha (float): alpha parameter of pruning.
         beta (float): beta parameter of pruning.
-        static_evaluation_func (Callable): position evaluation function.
+        static_evaluation_func (Callable[[Game], float]): position evaluation function.
         maximazing_player (bool): if we want to maximizing (for black)
         or minimize (for white)the score of the player.
 
@@ -76,19 +76,19 @@ def minimax(
 
 
 def think(
-    game, depth: int, static_evaluation_func: Callable
+    game: Game, depth: int, static_evaluation_func: Callable[[Game], float]
 ) -> tuple[int, int]:
     """Return the best move to play according to the game position,
     the player turn, a searching depth and a static evaluation method.
 
     Args:
-        game (Type[Game]): a game.
+        game (Game): a game.
         depth (int): depth of the search.
-        static_evaluation_func (Callable): position evaluation function.
+        static_evaluation_func (Callable[[Game], float]): position evaluation function.
 
 
     Returns:
-        int: row and column of the best move.
+        tuple[int, int]: row and column of the best move.
     """
     maximazing_player = game.player_value == BLACK_VALUE
     scores = []
@@ -112,7 +112,7 @@ def think(
     max_index = np.array(scores).argmax()
 
     return (
-        game.indicators[max_index]
+        cast(tuple[int, int], game.indicators[max_index])
         if maximazing_player
-        else game.indicators[min_index]
+        else cast(tuple[int, int], game.indicators[min_index])
     )

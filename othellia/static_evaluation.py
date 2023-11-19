@@ -161,14 +161,14 @@ class StaticEvaluation:
         )
 
     @staticmethod
-    def static_weights(game: Game) -> int:
+    def static_weights(game: Game) -> float:
         """Compare black pieces weights sum against white.
 
         Args:
             game (Game): a game.
 
         Returns:
-            int: evaluation score.
+            float: evaluation score.
         """
         weights = np.array(
             [
@@ -180,8 +180,7 @@ class StaticEvaluation:
                 [2, -1, 1, 0, 0, 1, -1, 2],
                 [-3, -4, -1, -1, -1, -1, -4, -3],
                 [4, -3, 2, 2, 2, 2, -3, 4],
-            ],
-            dtype=int,
+            ]
         )
 
         black_weights_sum = 0
