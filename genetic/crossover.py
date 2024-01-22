@@ -8,7 +8,7 @@ def one_point_crossover(
     np.ndarray[np.float64, np.dtype[np.float64]],
     np.ndarray[np.float64, np.dtype[np.float64]],
 ]:
-    """Performs one-point crossover on two parent chromosomes and retuns two new child
+    """Performs one-point crossover on two parent chromosomes and returns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.
@@ -38,7 +38,7 @@ def two_point_crossover(
     np.ndarray[np.float64, np.dtype[np.float64]],
     np.ndarray[np.float64, np.dtype[np.float64]],
 ]:
-    """Performs two-point crossover on two parent chromosomes and retuns two new child
+    """Performs two-point crossover on two parent chromosomes and returns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.
@@ -72,7 +72,7 @@ def uniform_crossover(
     np.ndarray[np.float64, np.dtype[np.float64]],
     np.ndarray[np.float64, np.dtype[np.float64]],
 ]:
-    """Performs uniform crossover on two parent chromosomes and retuns two new child
+    """Performs uniform crossover on two parent chromosomes and returns two new child
     chromosomes.
 
     New chromosomes are normalized to fit requirements.

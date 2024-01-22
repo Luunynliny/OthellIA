@@ -13,7 +13,7 @@ def minimax(
     alpha: float,
     beta: float,
     static_evaluation_func: Callable[[Game], float],
-    maximazing_player: bool,
+    maximizing_player: bool,
 ) -> float:
     """Analyse the current board position according to a static evaluation function and
     a depth.
@@ -24,7 +24,7 @@ def minimax(
         alpha (float): alpha parameter of pruning.
         beta (float): beta parameter of pruning.
         static_evaluation_func (Callable[[Game], float]): position evaluation function.
-        maximazing_player (bool): if we want to maximizing (for black)
+        maximizing_player (bool): if we want to maximize (for black)
         or minimize (for white)the score of the player.
 
     Returns:
@@ -34,7 +34,7 @@ def minimax(
     if depth == 0 or game.is_over:
         return static_evaluation_func(game)
 
-    if maximazing_player:
+    if maximizing_player:
         max_eval = -np.inf
 
         for move in game.indicators:
@@ -90,7 +90,7 @@ def think(
     Returns:
         tuple[int, int]: row and column of the best move.
     """
-    maximazing_player = game.player_value == BLACK_VALUE
+    maximizing_player = game.player_value == BLACK_VALUE
     scores = []
 
     for legal_move in game.indicators:
@@ -104,7 +104,7 @@ def think(
                 -np.inf,
                 np.inf,
                 static_evaluation_func,
-                maximazing_player,
+                maximizing_player,
             )
         )
 
@@ -113,6 +113,6 @@ def think(
 
     return (
         cast(tuple[int, int], game.indicators[max_index])
-        if maximazing_player
+        if maximizing_player
         else cast(tuple[int, int], game.indicators[min_index])
     )

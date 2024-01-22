@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from othellia.game import Game
+from othellia.game import Game, mouse_pos_to_cell_index
 from settings.board import BOARD_CELL_LENGTH
 from settings.directions import (
     DOWN,
@@ -146,10 +146,10 @@ def test_reset_game(game):
     assert not game.is_over
 
 
-def test_mouse_pos_to_cell_index(game):
-    assert game.mouse_pos_to_cell_index((0, 0)) == (0, 0)
-    assert game.mouse_pos_to_cell_index((WIDTH, HEIGHT)) == (8, 8)
-    assert game.mouse_pos_to_cell_index((150, 265)) == (1, 3)
+def test_mouse_pos_to_cell_index():
+    assert mouse_pos_to_cell_index((0, 0)) == (0, 0)
+    assert mouse_pos_to_cell_index((WIDTH, HEIGHT)) == (8, 8)
+    assert mouse_pos_to_cell_index((150, 265)) == (1, 3)
 
 
 def test_is_cell_empty(game):
@@ -213,7 +213,7 @@ def test_is_move_legal(game, rng):
 
     game.board.fill(BLACK_VALUE)
     game.update_ssi()
-    move = rng.integers(BOARD_CELL_LENGTH, size=2)
+    move = (rng.integers(BOARD_CELL_LENGTH), rng.integers(BOARD_CELL_LENGTH))
 
     assert not game.is_move_legal(move)
 
@@ -540,7 +540,7 @@ def test_get_empty_neighbors(game, rng):
     )
 
     game.board.fill(BLACK_VALUE)
-    cell_index = rng.integers(BOARD_CELL_LENGTH, size=2)
+    cell_index = (rng.integers(BOARD_CELL_LENGTH), rng.integers(BOARD_CELL_LENGTH))
 
     assert np.array_equal(game.get_empty_neighbors(cell_index), [])
 

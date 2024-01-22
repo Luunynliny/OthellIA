@@ -22,7 +22,7 @@ from settings.graphics import (
 from settings.values import BLACK_VALUE
 
 
-class Cell(pygame.sprite.Sprite):
+class Cell(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
     """Sprite of board cell.
 
     Args:
@@ -39,7 +39,7 @@ class Cell(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def draw(self, surface: pygame.SurfaceType) -> None:
+    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
         surface.blit(self.image, self.rect)
 
 
@@ -52,7 +52,7 @@ class Board(pygame.sprite.Group):  # type: ignore
         self.init_board()
 
     def init_board(self) -> None:
-        """Initiliaze board cells position."""
+        """Initialize board cells position."""
         for y in range(8):
             for x in range(8):
                 self.add(
@@ -63,7 +63,7 @@ class Board(pygame.sprite.Group):  # type: ignore
                 )
 
 
-class Piece(pygame.sprite.Sprite):
+class Piece(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
     """Sprite of a piece.
 
     A piece can be black or white, depending on which player it belongs to.
@@ -95,7 +95,7 @@ class Piece(pygame.sprite.Sprite):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface: pygame.SurfaceType) -> None:
+    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
         surface.blit(self.image, self.rect)
 
 
@@ -124,7 +124,7 @@ class PieceLayout(pygame.sprite.Group):  # type: ignore
                 self.add(Piece(col, row, is_black=(val == 1)))
 
 
-class Indicator(pygame.sprite.Sprite):
+class Indicator(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
     """Sprite of a move indicator.
 
     Only certain moves are legal on each player's turn, notified by indicators
@@ -157,7 +157,7 @@ class Indicator(pygame.sprite.Sprite):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface: pygame.SurfaceType) -> None:
+    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
         surface.blit(self.image, self.rect)
 
 
@@ -168,7 +168,7 @@ class IndicatorLayout(pygame.sprite.Group):  # type: ignore
         super().__init__()
 
     def update(
-        self, indicators: np.ndarray[tuple[int, int], np.dtype[np.int64]]
+            self, indicators: np.ndarray[tuple[int, int], np.dtype[np.int64]]
     ) -> None:
         """Update the indicator layout.
 
@@ -224,7 +224,7 @@ class EndgameMessage(pygame.sprite.Sprite):
     """Sprite of the endgame message notifying the result of the game.
 
     Args:
-        player_value (int | None): value of the player who won, None if draw.
+        player_value (int | None): value of the player who won, None if drawn.
     """
 
     def __init__(self, player_value: int | None) -> None:

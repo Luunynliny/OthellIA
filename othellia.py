@@ -1,6 +1,6 @@
 import pygame
 
-from othellia.game import Game
+from othellia.game import Game, mouse_pos_to_cell_index
 from othellia.sprites import (
     Board,
     EndgameMessage,
@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 running = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                cell_index = game.mouse_pos_to_cell_index(
+                cell_index = mouse_pos_to_cell_index(
                     pygame.mouse.get_pos()
                 )
 

@@ -1,6 +1,6 @@
 import pygame
 
-from othellia.game import Game
+from othellia.game import Game, mouse_pos_to_cell_index
 from othellia.minimax import think
 from othellia.sprites import (
     Board,
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     game = Game()
     static_evaluation = StaticEvaluation()
 
-    # Set genetic evulation weights
+    # Set genetic evaluation weights
     static_evaluation.load_evaluation_weights()
 
     running = True
@@ -44,7 +44,7 @@ if __name__ == "__main__":
                             running = False
 
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            cell_index = game.mouse_pos_to_cell_index(
+                            cell_index = mouse_pos_to_cell_index(
                                 pygame.mouse.get_pos()
                             )
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
                                 if game.is_move_legal(cell_index):
                                     game.play_piece(cell_index)
                 case values.WHITE_VALUE:
-                    # Find best legal move
+                    # Find the best legal move
                     best_move = think(
                         game,
                         depth=2,

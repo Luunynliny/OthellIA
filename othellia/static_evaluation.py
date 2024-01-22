@@ -111,8 +111,8 @@ class StaticEvaluation:
             ]
         )
 
-        black_corner_cnt = (corners == BLACK_VALUE).sum()
-        white_corner_cnt = (corners == WHITE_VALUE).sum()
+        black_corner_cnt = np.count_nonzero(corners == BLACK_VALUE)
+        white_corner_cnt = np.count_nonzero(corners == WHITE_VALUE)
 
         if black_corner_cnt + white_corner_cnt == 0:
             return 0
@@ -133,7 +133,7 @@ class StaticEvaluation:
         Returns:
             float: evaluation score.
         """
-        corners = [(0, 0), (0, 7), (7, 0), (7, 7)]
+        corners = np.array([(0, 0), (0, 7), (7, 0), (7, 7)])
 
         black_legal_moves = game.get_black_legal_moves()
         white_legal_moves = game.get_white_legal_moves()

@@ -11,13 +11,15 @@ def test_one_point_crossover(monkeypatch):
     values = [3, 5, 1]
     i = 0
 
-    class Mock_default_rng:
-        def integers(self, a, b):
+    # noinspection PyUnusedLocal
+    class MockDefaultRng:
+        @staticmethod
+        def integers(a, b):
             nonlocal i
             i += 1
             return values[i - 1]
 
-    monkeypatch.setattr(np.random, "default_rng", Mock_default_rng)
+    monkeypatch.setattr(np.random, "default_rng", MockDefaultRng)
 
     p1 = np.array([1, 1, 1, 1, 1, 1])
     p2 = np.array([0, 0, 0, 0, 0, 0])
@@ -54,13 +56,15 @@ def test_two_point_crossover(monkeypatch):
     values = np.array([[2, 3], [2, 4], [1, 2]])
     i = 0
 
-    class Mock_default_rng:
-        def choice(self, a, size, replace):
+    # noinspection PyUnusedLocal
+    class MockDefaultRng:
+        @staticmethod
+        def choice(a, size, replace):
             nonlocal i
             i += 1
             return values[i - 1]
 
-    monkeypatch.setattr(np.random, "default_rng", Mock_default_rng)
+    monkeypatch.setattr(np.random, "default_rng", MockDefaultRng)
 
     p1 = np.array([1, 1, 1, 1, 1, 1])
     p2 = np.array([0, 0, 0, 0, 0, 0])
@@ -99,13 +103,15 @@ def test_uniform_crossover(monkeypatch):
     )
     i = 0
 
-    class Mock_default_rng:
-        def choice(self, a, size, p):
+    # noinspection PyUnusedLocal
+    class MockDefaultRng:
+        @staticmethod
+        def choice(a, size, p):
             nonlocal i
             i += 1
             return values[i - 1]
 
-    monkeypatch.setattr(np.random, "default_rng", Mock_default_rng)
+    monkeypatch.setattr(np.random, "default_rng", MockDefaultRng)
 
     p1 = np.array([1, 1, 1, 1, 1, 1])
     p2 = np.array([0, 0, 0, 0, 0, 0])

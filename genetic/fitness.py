@@ -13,9 +13,9 @@ from utils.game import cell_index_to_notation
 
 
 def play_match(
-    chromosome_black: np.ndarray[np.float64, np.dtype[np.float64]],
-    chromosome_white: np.ndarray[np.float64, np.dtype[np.float64]],
-    depth: int,
+        chromosome_black: np.ndarray[np.float64, np.dtype[np.float64]],
+        chromosome_white: np.ndarray[np.float64, np.dtype[np.float64]],
+        depth: int,
 ) -> tuple[int, str]:
     """Plays an Othello game between two chromosomes and returns the result.
 
@@ -52,7 +52,7 @@ def play_match(
                     )
                 )
 
-        # Play best legal move
+        # Play the best legal move
         move = think(game, depth, static_evaluation.evaluate)
         game.play_piece(move)
 
@@ -63,7 +63,7 @@ def play_match(
 
 
 def play_tournament(
-    chromosomes: np.ndarray[np.float64, np.dtype[np.float64]], depth: int
+        chromosomes: np.ndarray[np.float64, np.dtype[np.float64]], depth: int
 ) -> np.ndarray[np.float64, np.dtype[np.float64]]:
     """Runs a tournament by making each chromosomes play against each other as black
     and white, and returns each chromosomes score.
@@ -78,15 +78,15 @@ def play_tournament(
     Returns:
         np.ndarray[np.float64, np.dtype[np.float64]]: list of chromosomes score.
     """
-    N_CHROMOSOMES = len(chromosomes)
+    n_chromosomes = len(chromosomes)
 
-    scores = np.zeros(N_CHROMOSOMES)
+    scores = np.zeros(n_chromosomes)
 
     # Iterate over each possible chromosome index pairs
     for b_index, w_index in tqdm(
-        permutations(range(N_CHROMOSOMES), 2),
-        desc="Tournament",
-        total=factorial(N_CHROMOSOMES) // factorial(N_CHROMOSOMES - 2),
+            permutations(range(n_chromosomes), 2),
+            desc="Tournament",
+            total=factorial(n_chromosomes) // factorial(n_chromosomes - 2),
     ):
         winner, _ = play_match(
             chromosomes[b_index], chromosomes[w_index], depth

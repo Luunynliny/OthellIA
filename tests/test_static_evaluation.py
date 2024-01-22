@@ -302,6 +302,7 @@ def test_set_evaluation_weights(static_evaluation):
 
 
 def test_load_genetic_evaluation_weights(static_evaluation, monkeypatch):
+    # noinspection PyUnusedLocal
     def mock_loadtxt(file_path):
         return np.array([1.111, 2.222, 3.333, 4.444, 5.555, 6.666])
 

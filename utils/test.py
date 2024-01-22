@@ -6,7 +6,7 @@ def dict_to_str(d: dict[str, Any]) -> str:
     Used to compare dictionnaries containing NumPy arrays.
 
     Args:
-        dict (dict): a dictionary.
+        d (dict): a dictionary.
 
     Returns:
         str: string encoded dictionary.
