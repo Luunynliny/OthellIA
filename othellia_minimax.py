@@ -2,12 +2,7 @@ import pygame
 
 from othellia.game import Game, mouse_pos_to_cell_index
 from othellia.minimax import think
-from othellia.sprites import (
-    Board,
-    EndgameMessage,
-    IndicatorLayout,
-    PieceLayout,
-)
+from othellia.sprites import Board, IndicatorLayout, PieceLayout, EndgameMessage  # type: ignore
 from othellia.static_evaluation import StaticEvaluation
 from settings import values
 from settings.colors import BOARD_COLOR

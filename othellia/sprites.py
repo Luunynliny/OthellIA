@@ -1,3 +1,5 @@
+# type: ignore
+
 import numpy as np
 import pygame
 
@@ -22,7 +24,7 @@ from settings.graphics import (
 from settings.values import BLACK_VALUE
 
 
-class Cell(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
+class Cell(pygame.sprite.Sprite):
     """Sprite of board cell.
 
     Args:
@@ -39,11 +41,11 @@ class Cell(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
 
-    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class Board(pygame.sprite.Group):  # type: ignore
+class Board(pygame.sprite.Group):
     """Sprite group of the board."""
 
     def __init__(self) -> None:
@@ -63,7 +65,7 @@ class Board(pygame.sprite.Group):  # type: ignore
                 )
 
 
-class Piece(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
+class Piece(pygame.sprite.Sprite):
     """Sprite of a piece.
 
     A piece can be black or white, depending on which player it belongs to.
@@ -95,11 +97,11 @@ class Piece(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class PieceLayout(pygame.sprite.Group):  # type: ignore
+class PieceLayout(pygame.sprite.Group):
     """Sprite group of all the pieces on the board."""
 
     def __init__(self) -> None:
@@ -124,7 +126,7 @@ class PieceLayout(pygame.sprite.Group):  # type: ignore
                 self.add(Piece(col, row, is_black=(val == 1)))
 
 
-class Indicator(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
+class Indicator(pygame.sprite.Sprite):
     """Sprite of a move indicator.
 
     Only certain moves are legal on each player's turn, notified by indicators
@@ -157,11 +159,11 @@ class Indicator(pygame.sprite.Sprite, pygame.sprite.AbstractGroup):
             col * CELL_SIZE + (col + 1) * CELL_GAP,
         )
 
-    def draw(self, surface: pygame.SurfaceType, **kwargs) -> None:
+    def draw(self, surface: pygame.SurfaceType) -> None:
         surface.blit(self.image, self.rect)
 
 
-class IndicatorLayout(pygame.sprite.Group):  # type: ignore
+class IndicatorLayout(pygame.sprite.Group):
     """Sprite group of all move indicators."""
 
     def __init__(self) -> None:

@@ -1,7 +1,11 @@
 from copy import deepcopy
 from textwrap import wrap
+from typing import Any
 
 import numpy as np
+from numpy import ndarray, dtype, signedinteger
+# noinspection PyProtectedMember
+from numpy._typing import _64Bit
 
 from settings.board import BOARD_CELL_LENGTH
 from settings.directions import DIRECTIONS
@@ -27,14 +31,14 @@ def mouse_pos_to_cell_index(pos: tuple[int, int]) -> tuple[int, int]:
 
 class Game:
     """Class gathering all the game's behaviours."""
+    player_value: int
+    is_over: bool
+    indicators: ndarray[Any, dtype[Any]]
+    surrounding_cells: ndarray[Any, dtype[Any]]
+    sandwiches: dict[str, ndarray[tuple[int, int], dtype[signedinteger[_64Bit]]]]
+    board: ndarray[Any, dtype[Any]]
 
     def __init__(self) -> None:
-        self.indicators = None
-        self.surrounding_cells = None
-        self.sandwiches = None
-        self.is_over = None
-        self.player_value = None
-        self.board = None
         self.reset_game()
 
     def reset_game(self) -> None:
@@ -103,7 +107,7 @@ class Game:
         """
         self.sandwiches = {}
 
-        if len(self.surrounding_cells != 0):
+        if len(self.surrounding_cells) != 0:
             for cell_index in self.surrounding_cells:
                 cell_sandwiches = self.search_cell_sandwiches(cell_index)
 
@@ -125,7 +129,7 @@ class Game:
             np.ndarray[tuple[int, int], np.dtype[np.int64]]: cell indices within the
             sandwiches.
         """
-        sandwiches: list[tuple[int, int]] = []
+        sandwiches: list[tuple[int, int] | dtype[signedinteger[_64Bit]]] = []
 
         # Loop for sandwiches in all directions
         for direction in DIRECTIONS:
@@ -216,12 +220,12 @@ class Game:
                 return np.flipud(self.board[:y, x + 1:]).diagonal()
             case (-1, 1):
                 return np.fliplr(self.board[y + 1:, :x]).diagonal()
-            case (-1, -1):
+            case _:
                 return np.flipud(np.fliplr(self.board[:y, :x])).diagonal()
 
     def update_surrounding_cells(self) -> None:
         """Find the empty cells surrounding the pieces cluster."""
-        surrounding_cells: list = []
+        surrounding_cells: list[tuple[int, int]] = []
 
         for cell_index in self.get_all_non_empty_cells():
             empty_neighbors = self.get_empty_neighbors(cell_index)
@@ -345,9 +349,7 @@ class Game:
                 col, row = list(map(int, k.split(",")))
                 cells.append((col, row))
 
-        self.indicators: np.ndarray[
-            tuple[int, int], np.dtype[np.int64]
-        ] = np.array(cells)
+        self.indicators = np.array(cells)
 
     def flip_sandwiches(self, indicator_index: tuple[int, int]) -> None:
         """Flip all the pieces within the available sandwiches from an indicator's
@@ -359,7 +361,7 @@ class Game:
         key = f"{indicator_index[0]},{indicator_index[1]}"
         _get = self.sandwiches.get(key)
 
-        cells_to_flip = _get if _get is not None else []
+        cells_to_flip = iter(_get) if _get is not None else []
 
         for col, row in cells_to_flip:
             self.board[row, col] *= -1
@@ -510,7 +512,7 @@ class Game:
         if len(black_cells) == 0:
             return 0
 
-        empty_cells: list = []
+        empty_cells: list[tuple[int, int]] = []
         for cell_index in black_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
@@ -532,7 +534,7 @@ class Game:
         if len(white_cells) == 0:
             return 0
 
-        empty_cells: list = []
+        empty_cells: list[tuple[int, int]] = []
         for cell_index in white_cells:
             empty_neighbors = self.get_empty_neighbors(cell_index)
 
